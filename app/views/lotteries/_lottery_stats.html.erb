@@ -1,24 +1,22 @@
 <%
-  # This partial displays lottery statistics in either light or dark theme
-  # Usage: render 'lotteries/lottery_stats', lottery: lottery, theme: :light/:dark
-  bg_class = theme == :dark ? "bg-white bg-opacity-20" : "bg-gray-100"
-  text_class = theme == :dark ? "text-white" : "text-gray-900"
-  label_class = theme == :dark ? "text-white text-opacity-80" : "text-gray-500"
+  # This partial displays lottery statistics
+  # Usage: render 'lotteries/lottery_stats', lottery: lottery
+  bg_class = "bg-gray-100"
 %>
 
 <div class="flex flex-wrap gap-4 mb-6">
   <div class="<%= bg_class %> rounded-lg px-4 py-3">
-    <div class="text-xs <%= label_class %>">Win Probability</div>
-    <div class="<%= text_class %> font-medium"><%= number_to_percentage(lottery.odds_json["win_probability"].to_f * 100, precision: 1) %></div>
+    <div class="text-xs text-gray-500">Win Probability</div>
+    <div class="text-black font-medium"><%= number_to_percentage(lottery.odds_json["win_probability"].to_f * 100, precision: 1) %></div>
   </div>
   
   <div class="<%= bg_class %> rounded-lg px-4 py-3">
-    <div class="text-xs <%= label_class %>">Min Bet</div>
-    <div class="<%= text_class %> font-medium"><%= number_to_currency(lottery.odds_json["min_bet"]) %></div>
+    <div class="text-xs text-gray-500">Min Bet</div>
+    <div class="text-black font-medium"><%= number_to_currency(lottery.odds_json["min_bet"]) %></div>
   </div>
   
   <div class="<%= bg_class %> rounded-lg px-4 py-3">
-    <div class="text-xs <%= label_class %>">Payout Multiplier</div>
-    <div class="<%= text_class %> font-medium"><%= lottery.odds_json["payout_multiplier"] %>x</div>
+    <div class="text-xs text-gray-500">Payout Multiplier</div>
+    <div class="text-black font-medium"><%= lottery.odds_json["payout_multiplier"] %>x</div>
   </div>
 </div>
