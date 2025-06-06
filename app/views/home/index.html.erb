@@ -1,0 +1,178 @@
+<div class="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-16">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row items-center justify-between">
+      <div class="md:w-1/2 mb-8 md:mb-0">
+        <h1 class="text-4xl md:text-5xl font-bold mb-4">Alot Ethical Lottery Platform</h1>
+        <p class="text-xl mb-6">Transparent, fair, and verifiable lottery games powered by blockchain technology.</p>
+        <div class="flex flex-wrap gap-4">
+          <% if user_signed_in? %>
+            <%= link_to "Browse Lotteries", lotteries_path, class: "bg-white text-indigo-600 hover:bg-indigo-100 font-medium py-2 px-6 rounded-lg transition duration-200" %>
+          <% else %>
+            <%= link_to "Sign Up", new_user_registration_path, class: "bg-white text-indigo-600 hover:bg-indigo-100 font-medium py-2 px-6 rounded-lg transition duration-200" %>
+            <%= link_to "Log In", new_user_session_path, class: "border border-white hover:bg-white hover:text-indigo-600 font-medium py-2 px-6 rounded-lg transition duration-200" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="md:w-1/2">
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-6 rounded-xl border border-white border-opacity-20">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-2xl font-bold">Featured Lottery</h2>
+            <div class="bg-yellow-400 text-yellow-800 text-xs font-bold px-2 py-1 rounded-full">JACKPOT</div>
+          </div>
+          
+          <% if @jackpot_lottery.present? %>
+            <div class="mb-4">
+              <h3 class="text-xl font-semibold mb-1"><%= @jackpot_lottery.name %></h3>
+              <p class="text-sm text-white text-opacity-80 mb-3"><%= @jackpot_lottery.description.truncate(100) %></p>
+              
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <p class="text-xs text-white text-opacity-70">Current Jackpot</p>
+                  <p class="text-2xl font-bold"><%= number_to_currency(@jackpot_lottery.current_payout) %></p>
+                </div>
+                <div>
+                  <p class="text-xs text-white text-opacity-70">Ends In</p>
+                  <p class="text-2xl font-bold" data-controller="countdown" data-countdown-target="display" data-countdown-end-value="<%= @jackpot_lottery.end_date.to_i %>">--:--:--</p>
+                </div>
+              </div>
+              
+              <%= link_to "Play Now", lottery_path(@jackpot_lottery), class: "block w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-center font-medium py-2 px-4 rounded-lg transition duration-200" %>
+            </div>
+          <% else %>
+            <div class="text-center py-8">
+              <p>No active lotteries available at the moment.</p>
+              <p class="text-sm mt-2">Check back soon for new opportunities!</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="container mx-auto px-4 py-12">
+  <h2 class="text-3xl font-bold text-gray-800 mb-8">How It Works</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">1. Choose a Lottery</h3>
+      <p class="text-gray-600">Browse our selection of ethical lotteries with transparent rules and verifiable outcomes.</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 9a2 2 0 11-4 0 2 2 0 014 0z" />
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 10v5a2 2 0 01-2 2H7a2 2 0 01-2-2v-5m14-2v-2a2 2 0 00-2-2H7a2 2 0 00-2 2v2m14 0h-5m-9 0H5" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">2. Place Your Bet</h3>
+      <p class="text-gray-600">Make your bet with confidence knowing that all transactions are secure and transparent.</p>
+    </div>
+    
+    <div class="bg-white p-6 rounded-xl shadow-md border border-gray-100">
+      <div class="bg-indigo-100 text-indigo-600 w-12 h-12 rounded-full flex items-center justify-center mb-4">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+        </svg>
+      </div>
+      <h3 class="text-xl font-semibold mb-2">3. Verify Results</h3>
+      <p class="text-gray-600">All lottery results are publicly verifiable on the blockchain, ensuring complete fairness.</p>
+    </div>
+  </div>
+</div>
+
+<% if @recent_lotteries.present? %>
+<div class="bg-gray-50 py-12">
+  <div class="container mx-auto px-4">
+    <div class="flex justify-between items-center mb-8">
+      <h2 class="text-3xl font-bold text-gray-800">Recent Lotteries</h2>
+      <%= link_to "View All", lotteries_path, class: "text-indigo-600 hover:text-indigo-800 font-medium" %>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <% @recent_lotteries.each do |lottery| %>
+        <div class="bg-white rounded-xl shadow-md overflow-hidden border border-gray-100 transition-transform hover:scale-[1.02] hover:shadow-lg">
+          <div class="p-6">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-xl font-semibold"><%= lottery.name %></h3>
+              <span class="<%= lottery.status == 'active' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %> text-xs font-medium px-2.5 py-0.5 rounded-full">
+                <%= lottery.status.capitalize %>
+              </span>
+            </div>
+            
+            <p class="text-gray-600 text-sm mb-4"><%= lottery.description.truncate(80) %></p>
+            
+            <div class="grid grid-cols-2 gap-4 mb-4">
+              <div>
+                <p class="text-xs text-gray-500">Current Pool</p>
+                <p class="text-lg font-bold text-gray-900"><%= number_to_currency(lottery.current_payout) %></p>
+              </div>
+              <div>
+                <p class="text-xs text-gray-500">Total Bets</p>
+                <p class="text-lg font-bold text-gray-900"><%= lottery.bets.count %></p>
+              </div>
+            </div>
+            
+            <%= link_to "View Details", lottery_path(lottery), class: "block w-full bg-indigo-600 hover:bg-indigo-700 text-white text-center font-medium py-2 px-4 rounded-lg transition duration-200" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="container mx-auto px-4 py-12">
+  <div class="bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl overflow-hidden shadow-xl">
+    <div class="flex flex-col md:flex-row">
+      <div class="md:w-1/2 p-8 md:p-12">
+        <h2 class="text-3xl font-bold text-white mb-4">Join Our Ethical Lottery Community</h2>
+        <p class="text-white text-opacity-90 mb-6">Experience the future of fair, transparent, and verifiable lottery games. Sign up today and be part of the revolution.</p>
+        <div class="flex flex-wrap gap-4">
+          <% unless user_signed_in? %>
+            <%= link_to "Sign Up Now", new_user_registration_path, class: "bg-white text-indigo-600 hover:bg-indigo-100 font-medium py-2 px-6 rounded-lg transition duration-200" %>
+          <% else %>
+            <%= link_to "My Dashboard", player_dashboard_path, class: "bg-white text-indigo-600 hover:bg-indigo-100 font-medium py-2 px-6 rounded-lg transition duration-200" %>
+          <% end %>
+        </div>
+      </div>
+      <div class="md:w-1/2 bg-indigo-800 p-8 md:p-12">
+        <div class="bg-white bg-opacity-10 backdrop-filter backdrop-blur-lg p-6 rounded-xl border border-white border-opacity-20">
+          <h3 class="text-xl font-bold text-white mb-4">Platform Features</h3>
+          <ul class="space-y-3">
+            <li class="flex items-center text-white">
+              <svg class="h-5 w-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Blockchain-verified lottery results
+            </li>
+            <li class="flex items-center text-white">
+              <svg class="h-5 w-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Transparent payout system
+            </li>
+            <li class="flex items-center text-white">
+              <svg class="h-5 w-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Multiple lottery types and strategies
+            </li>
+            <li class="flex items-center text-white">
+              <svg class="h-5 w-5 mr-2 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+              Secure and fair gaming environment
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

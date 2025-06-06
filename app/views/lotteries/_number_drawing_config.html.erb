@@ -1,0 +1,23 @@
+<%# Number drawing configuration partial %>
+<div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+  <div class="p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Number Drawing</h2>
+    
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Maximum Numbers to Draw</h3>
+        <p class="mt-1 text-lg font-semibold text-gray-900"><%= lottery.max_numbers_to_draw %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Cost Per Number</h3>
+        <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(lottery.cost_per_number) %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Maximum Potential Cost</h3>
+        <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(lottery.cost_per_number * lottery.max_numbers_to_draw) %></p>
+      </div>
+    </div>
+  </div>
+</div>

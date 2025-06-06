@@ -1,0 +1,51 @@
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+  <h3 class="text-lg font-medium text-gray-900 mb-4">Draw Numbers</h3>
+  
+  <div class="bg-blue-50 p-4 rounded mb-4">
+    <p class="text-sm text-blue-700">
+      You can draw up to <%= bet.lottery.max_numbers_to_draw %> numbers for this lottery.
+      Each number costs <%= number_to_currency(bet.lottery.cost_per_number) %>.
+      <br>
+      You have drawn <%= bet.drawn_numbers.count %> of <%= bet.lottery.max_numbers_to_draw %> numbers.
+      <% if remaining_draws(bet) > 0 %>
+        <br>
+        Potential additional cost: <%= number_to_currency(potential_additional_cost(bet)) %> if you draw all remaining numbers.
+      <% end %>
+    </p>
+  </div>
+  
+  <div id="number_draw_errors"></div>
+  
+  <% if bet.drawn_numbers.count < bet.lottery.max_numbers_to_draw %>
+    <%= form_with(model: [bet, DrawnNumber.new], class: "space-y-4", data: { controller: "drawn-number", drawn_number_min_value: 1, drawn_number_max_value: 100 }) do |form| %>
+      <div class="flex items-end space-x-4">
+        <div class="flex-grow">
+          <%= form.label :number, "Enter a number", class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <div class="relative">
+            <%= form.number_field :number, min: 1, max: 100, required: true, class: "w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring focus:ring-blue-500 focus:ring-opacity-50", data: { drawn_number_target: "input", action: "input->drawn-number#validateInput" } %>
+            <div data-drawn-number-target="feedback" class="absolute text-xs mt-1"></div>
+          </div>
+        </div>
+        
+        <%= form.submit "Draw Number", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed", data: { turbo: true, drawn_number_target: "submit" } %>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="bg-yellow-50 p-4 rounded">
+      <p class="text-sm text-yellow-700">
+        You have reached the maximum number of draws for this lottery.
+      </p>
+    </div>
+  <% end %>
+  
+  <% if bet.drawn_numbers.any? %>
+    <div class="mt-6">
+      <h4 class="text-md font-medium text-gray-800 mb-2">Your Drawn Numbers</h4>
+      <div id="drawn_numbers">
+        <% bet.drawn_numbers.order(created_at: :desc).each do |drawn_number| %>
+          <%= render 'drawn_numbers/drawn_number', drawn_number: drawn_number %>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+</div>

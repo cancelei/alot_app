@@ -1,0 +1,128 @@
+<%# Admin dashboard betting trends partial %>
+<div id="betting-trends" class="bg-white rounded-lg shadow p-6 mb-6">
+  <h3 class="text-lg font-semibold text-gray-800 mb-4">Betting Trends</h3>
+  
+  <% if betting_trends.any? %>
+    <div class="relative" style="height: 300px;">
+      <canvas id="betting-trends-chart"></canvas>
+    </div>
+    
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        const ctx = document.getElementById('betting-trends-chart').getContext('2d');
+        
+        // Extract data from Ruby variables
+        const dates = <%= raw betting_trends.map { |trend| trend[:date].strftime("%b %d") }.to_json %>;
+        const betCounts = <%= raw betting_trends.map { |trend| trend[:count] }.to_json %>;
+        const betAmounts = <%= raw betting_trends.map { |trend| trend[:amount].to_f }.to_json %>;
+        
+        new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: dates,
+            datasets: [
+              {
+                label: 'Bet Count',
+                data: betCounts,
+                borderColor: 'rgba(59, 130, 246, 1)',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                yAxisID: 'y'
+              },
+              {
+                label: 'Bet Volume ($)',
+                data: betAmounts,
+                borderColor: 'rgba(16, 185, 129, 1)',
+                backgroundColor: 'rgba(16, 185, 129, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4,
+                yAxisID: 'y1'
+              }
+            ]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+              mode: 'index',
+              intersect: false,
+            },
+            scales: {
+              y: {
+                type: 'linear',
+                display: true,
+                position: 'left',
+                title: {
+                  display: true,
+                  text: 'Bet Count'
+                }
+              },
+              y1: {
+                type: 'linear',
+                display: true,
+                position: 'right',
+                title: {
+                  display: true,
+                  text: 'Volume ($)'
+                },
+                grid: {
+                  drawOnChartArea: false,
+                }
+              },
+              x: {
+                title: {
+                  display: true,
+                  text: 'Date'
+                }
+              }
+            },
+            plugins: {
+              tooltip: {
+                callbacks: {
+                  label: function(context) {
+                    let label = context.dataset.label || '';
+                    if (label) {
+                      label += ': ';
+                    }
+                    if (context.dataset.label === 'Bet Volume ($)') {
+                      label += new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' }).format(context.parsed.y);
+                    } else {
+                      label += context.parsed.y;
+                    }
+                    return label;
+                  }
+                }
+              },
+              legend: {
+                position: 'top',
+              },
+              title: {
+                display: false,
+              }
+            }
+          }
+        });
+      });
+    </script>
+    
+    <div class="mt-4 grid grid-cols-2 gap-4">
+      <div class="bg-blue-50 p-4 rounded-lg">
+        <h4 class="text-sm font-medium text-blue-800 mb-2">Total Bets (30 days)</h4>
+        <p class="text-2xl font-bold text-blue-900">
+          <%= betting_trends.sum { |trend| trend[:count] } %>
+        </p>
+      </div>
+      <div class="bg-green-50 p-4 rounded-lg">
+        <h4 class="text-sm font-medium text-green-800 mb-2">Total Volume (30 days)</h4>
+        <p class="text-2xl font-bold text-green-900">
+          <%= number_to_currency(betting_trends.sum { |trend| trend[:amount] }) %>
+        </p>
+      </div>
+    </div>
+  <% else %>
+    <div class="py-4 text-center text-gray-500">No betting data available for the selected period</div>
+  <% end %>
+</div>

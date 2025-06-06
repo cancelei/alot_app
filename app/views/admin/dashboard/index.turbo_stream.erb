@@ -1,0 +1,52 @@
+<%# Turbo Stream template for admin dashboard updates %>
+<%= turbo_stream.replace "dashboard-stats" do %>
+  <%= render partial: "admin/dashboard/stats", locals: { 
+    platform_stats: @platform_stats,
+    total_lotteries: @total_lotteries,
+    active_lotteries: @active_lotteries,
+    draft_lotteries: @draft_lotteries,
+    ended_lotteries: @ended_lotteries,
+    total_bets: @total_bets,
+    total_bet_amount: @total_bet_amount,
+    pending_bets: @pending_bets,
+    won_bets: @won_bets,
+    lost_bets: @lost_bets
+  } %>
+<% end %>
+
+<%= turbo_stream.replace "recent-activity" do %>
+  <%= render partial: "admin/dashboard/recent_activity", locals: {
+    recent_bets: @recent_bets,
+    recent_payouts: @recent_payouts,
+    recent_players: @recent_players
+  } %>
+<% end %>
+
+<%= turbo_stream.replace "lottery-performance" do %>
+  <%= render partial: "admin/dashboard/lottery_performance", locals: {
+    top_performing_lotteries: @top_performing_lotteries
+  } %>
+<% end %>
+
+<%= turbo_stream.replace "betting-trends" do %>
+  <%= render partial: "admin/dashboard/betting_trends", locals: {
+    betting_trends: @betting_trends
+  } %>
+<% end %>
+
+<%= turbo_stream.replace "feature-requests" do %>
+  <%= render partial: "admin/dashboard/feature_requests", locals: {
+    total_feature_requests: @total_feature_requests,
+    pending_feature_requests: @pending_feature_requests,
+    approved_feature_requests: @approved_feature_requests,
+    rejected_feature_requests: @rejected_feature_requests,
+    shipped_feature_requests: @shipped_feature_requests,
+    recent_feature_requests: @recent_feature_requests
+  } %>
+<% end %>
+
+<%= turbo_stream.replace "last-updated" do %>
+  <div id="last-updated" class="text-sm text-gray-500 mt-2">
+    Last updated: <%= Time.current.strftime("%B %d, %Y %H:%M:%S") %>
+  </div>
+<% end %>

@@ -1,0 +1,35 @@
+<%# Main lotteries index page - refactored for better readability %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Available Lotteries</h1>
+  </div>
+
+  <%# Featured jackpot lottery section %>
+  <%= render 'lotteries/jackpot_lottery', jackpot_lottery: @jackpot_lottery %>
+
+  <%# All available lotteries section %>
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">All Lotteries</h2>
+    </div>
+    
+    <% if @lotteries.present? %>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 p-6">
+        <% @lotteries.each do |lottery| %>
+          <%= render 'lotteries/lottery_card', lottery: lottery %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="py-12 text-center">
+        <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        <h3 class="mt-2 text-sm font-medium text-gray-900">No active lotteries found</h3>
+        <p class="mt-1 text-sm text-gray-500">Check back soon for new opportunities!</p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# How it works section %>
+  <%= render 'lotteries/how_it_works' %>
+</div>

@@ -1,0 +1,53 @@
+<%# Lottery show page - refactored for better readability %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800"><%= @lottery.name %></h1>
+    <%= link_to lotteries_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Lotteries
+    <% end %>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <%# Left Column: Lottery Details %>
+    <div class="lg:col-span-2">
+      <%# Lottery details section %>
+      <%= render 'lotteries/lottery_details', lottery: @lottery %>
+      
+      <%# Number drawing configuration %>
+      <%= render 'lotteries/number_drawing_config', lottery: @lottery %>
+      
+      <%# Lottery odds %>
+      <%= render 'lotteries/lottery_odds', lottery: @lottery %>
+      
+      <%# Number drawing statistics %>
+      <%= render 'lotteries/number_drawing_stats', lottery: @lottery %>
+    </div>
+    
+    <%# Right Column: Participation %>
+    <div>
+      <% if user_signed_in? %>
+        <% current_user_bet = @lottery.bets.where(player: current_user).last %>
+        
+        <% if current_user_bet.present? %>
+          <%# User has already placed a bet %>
+          <%= render 'lotteries/current_bet', bet: current_user_bet %>
+          
+          <%# Number Drawing Form %>
+          <%= render 'drawn_numbers/form', bet: current_user_bet %>
+        <% else %>
+          <%# Place a bet form %>
+          <%= render 'lotteries/place_bet_form', lottery: @lottery %>
+        <% end %>
+      <% else %>
+        <%# User not signed in %>
+        <%= render 'lotteries/login_prompt' %>
+      <% end %>
+      
+      <%# Recent Winners %>
+      <%= render 'lotteries/recent_winners', lottery: @lottery %>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,158 @@
+<div class="min-h-screen bg-gradient-to-b from-indigo-50 to-white py-12">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center">
+      <h1 class="text-3xl font-extrabold text-indigo-900 sm:text-4xl">
+        Blockchain Wallet Integration
+      </h1>
+      <p class="mt-3 max-w-2xl mx-auto text-xl text-gray-500 sm:mt-4">
+        Coming in Phase 2 - Connect your blockchain wallet for enhanced security and transparency
+      </p>
+    </div>
+
+    <div class="mt-12 bg-white rounded-lg shadow-xl overflow-hidden">
+      <div class="px-4 py-5 sm:p-6">
+        <div class="flex items-center justify-center">
+          <div class="bg-indigo-100 rounded-full p-3">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-indigo-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+            </svg>
+          </div>
+        </div>
+        
+        <h3 class="mt-5 text-lg leading-6 font-medium text-gray-900 text-center">
+          Blockchain Integration Coming Soon
+        </h3>
+        
+        <div class="mt-4">
+          <p class="text-sm text-gray-500 text-center">
+            In Phase 2, you'll be able to connect your blockchain wallet to enhance security and transparency.
+            This feature will support multiple blockchain networks, with a focus on Polkadot integration.
+          </p>
+        </div>
+        
+        <div class="mt-8">
+          <h4 class="text-md font-medium text-gray-700 mb-4">Supported Networks (Coming Soon)</h4>
+          
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-3">
+            <% @supported_networks.each do |network| %>
+              <div class="relative rounded-lg border border-gray-300 bg-white px-6 py-5 shadow-sm flex items-center space-x-3 hover:border-gray-400 opacity-60">
+                <div class="flex-shrink-0">
+                  <div class="h-10 w-10 rounded-full bg-gray-100 flex items-center justify-center">
+                    <%= network[:name][0] %>
+                  </div>
+                </div>
+                <div class="flex-1 min-w-0">
+                  <span class="absolute inset-0" aria-hidden="true"></span>
+                  <p class="text-sm font-medium text-gray-900"><%= network[:name] %></p>
+                  <p class="text-xs text-gray-500">Coming in Phase 2</p>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="mt-8 border-t border-gray-200 pt-6">
+          <h4 class="text-md font-medium text-gray-700 mb-4">Benefits of Blockchain Integration</h4>
+          
+          <div class="mt-5 grid grid-cols-1 gap-5 sm:grid-cols-2">
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+                    </svg>
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Enhanced Security
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-sm text-gray-900">
+                        Secure your account with blockchain-based authentication
+                      </div>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
+                    </svg>
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Transparent Transactions
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-sm text-gray-900">
+                        All lottery transactions will be verifiable on the blockchain
+                      </div>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                    </svg>
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Smart Contracts
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-sm text-gray-900">
+                        Automated payouts and lottery operations through smart contracts
+                      </div>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="bg-white overflow-hidden shadow rounded-lg">
+              <div class="px-4 py-5 sm:p-6">
+                <div class="flex items-center">
+                  <div class="flex-shrink-0 bg-indigo-500 rounded-md p-3">
+                    <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
+                    </svg>
+                  </div>
+                  <div class="ml-5 w-0 flex-1">
+                    <dt class="text-sm font-medium text-gray-500 truncate">
+                      Cross-Chain Compatibility
+                    </dt>
+                    <dd class="flex items-baseline">
+                      <div class="text-sm text-gray-900">
+                        Support for multiple blockchain networks, including Polkadot
+                      </div>
+                    </dd>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-gray-50 px-4 py-4 sm:px-6 border-t border-gray-200">
+        <div class="text-sm text-center">
+          <button disabled class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-300 cursor-not-allowed">
+            Connect Wallet (Coming in Phase 2)
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

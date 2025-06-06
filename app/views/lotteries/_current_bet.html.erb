@@ -1,0 +1,23 @@
+<%# Current bet display partial %>
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+  <h3 class="text-lg font-medium text-gray-900 mb-4">Your Current Bet</h3>
+  
+  <div class="space-y-4">
+    <div>
+      <h4 class="text-sm font-medium text-gray-500">Bet Amount</h4>
+      <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(bet.amount) %></p>
+    </div>
+    
+    <div>
+      <h4 class="text-sm font-medium text-gray-500">Placed On</h4>
+      <p class="mt-1 text-base text-gray-900"><%= bet.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+    </div>
+    
+    <div>
+      <h4 class="text-sm font-medium text-gray-500">Status</h4>
+      <div class="mt-1 flex items-center">
+        <%= bet_status_badge(bet) %>
+      </div>
+    </div>
+  </div>
+</div>

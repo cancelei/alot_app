@@ -1,0 +1,31 @@
+<% if jackpot_lottery.present? %>
+  <div class="bg-gradient-to-r from-blue-500 to-indigo-600 rounded-lg shadow-lg overflow-hidden mb-8">
+    <div class="p-6 md:p-8">
+      <div class="flex flex-col md:flex-row items-start md:items-center justify-between mb-4">
+        <div>
+          <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-blue-800 bg-opacity-50 text-white mb-2">
+            Jackpot Lottery
+          </span>
+          <h2 class="text-2xl md:text-3xl font-bold text-white"><%= jackpot_lottery.name %></h2>
+        </div>
+        <div class="mt-4 md:mt-0">
+          <div class="text-white text-opacity-90 text-sm mb-1">Current Jackpot</div>
+          <div class="text-white text-2xl md:text-4xl font-bold"><%= number_to_currency(jackpot_lottery.current_payout) %></div>
+        </div>
+      </div>
+      
+      <div class="prose prose-sm max-w-none text-white text-opacity-90 mb-6">
+        <%= jackpot_lottery.description.truncate(150) %>
+      </div>
+      
+      <%= render 'lotteries/lottery_stats', lottery: jackpot_lottery, theme: :dark %>
+      
+      <%= link_to lottery_path(jackpot_lottery), class: "inline-flex items-center px-5 py-3 bg-white text-indigo-600 rounded-md font-medium hover:bg-opacity-90 transition-colors" do %>
+        Play Now
+        <svg class="ml-2 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+        </svg>
+      <% end %>
+    </div>
+  </div>
+<% end %>

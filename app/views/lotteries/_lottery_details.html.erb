@@ -1,0 +1,37 @@
+<%# Lottery details section %>
+<div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+  <div class="p-6">
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-xl font-semibold text-gray-800">Lottery Details</h2>
+      <%= lottery_status_badge(lottery) %>
+    </div>
+    
+    <div class="prose max-w-none text-gray-600 mb-6">
+      <%= lottery.description %>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 border-t border-gray-200 pt-4">
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Payout Strategy</h3>
+        <p class="mt-1 text-base font-medium text-gray-900"><%= lottery.payout_strategy.humanize %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Current Payout</h3>
+        <p class="mt-1 text-base font-medium text-gray-900"><%= number_to_currency(lottery.current_payout) %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Reinvestment Ratio</h3>
+        <p class="mt-1 text-base font-medium text-gray-900"><%= number_to_percentage(lottery.reinvestment_ratio * 100, precision: 0) %></p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Duration</h3>
+        <p class="mt-1 text-base font-medium text-gray-900">
+          <%= format_lottery_duration(lottery) %>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

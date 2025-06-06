@@ -1,0 +1,29 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  description: MyText
+  status: 1
+  odds_json: 
+  cycles_count: 1
+  reinvestment_ratio: 9.99
+  is_endless: false
+  smart_contract_address: MyString
+  payout_strategy: 1
+  visibility: 1
+  deployed_at: 2025-06-05 22:09:36
+  created_by_id: one
+
+two:
+  name: MyString
+  description: MyText
+  status: 1
+  odds_json: 
+  cycles_count: 1
+  reinvestment_ratio: 9.99
+  is_endless: false
+  smart_contract_address: MyString
+  payout_strategy: 1
+  visibility: 1
+  deployed_at: 2025-06-05 22:09:36
+  created_by_id: two

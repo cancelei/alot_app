@@ -1,0 +1,159 @@
+<div class="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="mb-8">
+      <h1 class="text-3xl font-extrabold text-indigo-900">Welcome, <%= current_user.name %></h1>
+      <p class="mt-2 text-sm text-gray-600">Your ethical lottery dashboard</p>
+    </div>
+
+    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <!-- Active Bets Card -->
+      <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg font-medium text-gray-900">Your Active Bets</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Bets you've placed in active lotteries</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <% if current_user.bets.count > 0 %>
+            <div class="space-y-4">
+              <% current_user.bets.limit(5).each do |bet| %>
+                <div class="border border-gray-200 rounded-md p-4 hover:bg-gray-50">
+                  <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-900">Lottery #<%= bet.lottery_id %></span>
+                    <span class="text-xs text-gray-500"><%= bet.created_at.strftime("%b %d, %Y") %></span>
+                  </div>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Bet ID: <%= bet.id %></span>
+                    <%= link_to "View Details", bet_path(bet), class: "text-xs text-indigo-600 hover:text-indigo-900" %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="mt-4 text-center">
+              <%= link_to "View All Bets", lotteries_path, class: "text-sm text-indigo-600 hover:text-indigo-900" %>
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No bets yet</h3>
+              <p class="mt-1 text-sm text-gray-500">Get started by placing your first bet!</p>
+              <div class="mt-6">
+                <%= link_to "Browse Lotteries", lotteries_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Recent Winnings Card -->
+      <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg font-medium text-gray-900">Recent Winnings</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Your recent lottery payouts</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <% if current_user.bets.joins(:payout_logs).count > 0 %>
+            <!-- Show winnings here -->
+            <div class="space-y-4">
+              <!-- Placeholder for winnings -->
+            </div>
+          <% else %>
+            <div class="text-center py-4">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="mt-2 text-sm font-medium text-gray-900">No winnings yet</h3>
+              <p class="mt-1 text-sm text-gray-500">Place bets to have a chance of winning!</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Account Settings Card -->
+      <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+        <div class="px-4 py-5 sm:px-6">
+          <h3 class="text-lg font-medium text-gray-900">Account Settings</h3>
+          <p class="mt-1 max-w-2xl text-sm text-gray-500">Manage your account</p>
+        </div>
+        <div class="px-4 py-5 sm:p-6">
+          <nav class="space-y-1" aria-label="Account">
+            <%= link_to edit_user_registration_path, class: "text-gray-600 hover:bg-gray-50 hover:text-gray-900 flex items-center px-3 py-2 text-sm font-medium rounded-md" do %>
+              <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span class="truncate">Edit Profile</span>
+            <% end %>
+
+            <%= link_to blockchain_wallets_path, class: "text-gray-600 hover:bg-gray-50 hover:text-gray-900 flex items-center px-3 py-2 text-sm font-medium rounded-md" do %>
+              <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+              </svg>
+              <span class="truncate">Blockchain Wallet <span class="ml-1 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-indigo-100 text-indigo-800">Coming Soon</span></span>
+            <% end %>
+
+            <%= link_to feature_requests_path, class: "text-gray-600 hover:bg-gray-50 hover:text-gray-900 flex items-center px-3 py-2 text-sm font-medium rounded-md" do %>
+              <svg class="text-gray-400 group-hover:text-gray-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z" />
+              </svg>
+              <span class="truncate">Feature Requests</span>
+            <% end %>
+
+            <%= link_to destroy_user_session_path, data: { turbo_method: :delete }, class: "text-red-600 hover:bg-red-50 hover:text-red-900 flex items-center px-3 py-2 text-sm font-medium rounded-md" do %>
+              <svg class="text-red-400 group-hover:text-red-500 flex-shrink-0 -ml-1 mr-3 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+              </svg>
+              <span class="truncate">Sign Out</span>
+            <% end %>
+          </nav>
+        </div>
+      </div>
+    </div>
+
+    <!-- Featured Lotteries Section -->
+    <div class="mt-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Featured Lotteries</h2>
+      <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        <!-- This will be populated with active lotteries -->
+        <% Lottery.active_lotteries.limit(3).each do |lottery| %>
+          <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
+            <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-500 to-purple-600">
+              <h3 class="text-lg font-medium text-white"><%= lottery.title %></h3>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+              <div class="space-y-4">
+                <div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Current Pot:</span>
+                    <span class="font-medium text-gray-900">$<%= number_with_precision(lottery.current_payout, precision: 2) %></span>
+                  </div>
+                </div>
+                <div>
+                  <div class="flex justify-between text-sm">
+                    <span class="text-gray-500">Time Remaining:</span>
+                    <span class="font-medium text-gray-900" data-controller="countdown" data-countdown-target="timer" data-countdown-end-value="<%= lottery.next_draw_at.to_i * 1000 %>"></span>
+                  </div>
+                </div>
+                <div class="pt-4">
+                  <%= link_to "View Details", lottery_path(lottery), class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                </div>
+              </div>
+            </div>
+          </div>
+        <% end %>
+
+        <% if Lottery.active_lotteries.count == 0 %>
+          <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg">
+            <div class="px-4 py-12 sm:px-6 text-center">
+              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              <h3 class="mt-2 text-lg font-medium text-gray-900">No active lotteries</h3>
+              <p class="mt-1 text-sm text-gray-500">Check back soon for new lottery opportunities!</p>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

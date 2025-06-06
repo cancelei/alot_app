@@ -4,5 +4,20 @@
 
 import { application } from "./application"
 
+import AdminDashboardController from "./admin_dashboard_controller"
+application.register("admin-dashboard", AdminDashboardController)
+
+import BettingFormController from "./betting_form_controller"
+application.register("betting-form", BettingFormController)
+
+import FeatureRequestController from "./feature_request_controller"
+application.register("feature-request", FeatureRequestController)
+
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import ModalController from "./modal_controller"
+application.register("modal", ModalController)
+
+import TooltipController from "./tooltip_controller"
+application.register("tooltip", TooltipController)

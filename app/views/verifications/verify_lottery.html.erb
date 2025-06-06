@@ -1,0 +1,96 @@
+<%# Verification page for lottery contracts %>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="bg-purple-600 p-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-white">Lottery Contract Verification</h1>
+        <%= verification_badge(@lottery.smart_contract_address.present?) %>
+      </div>
+      <p class="text-purple-100 mt-2">
+        Transparent verification of lottery smart contract for blockchain integrity
+      </p>
+    </div>
+    
+    <div class="p-6">
+      <div class="mb-6 pb-6 border-b">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Contract Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Contract Address</p>
+            <p class="font-mono text-sm break-all"><%= @lottery.smart_contract_address %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Deployment Time</p>
+            <p class="font-medium"><%= @lottery.deployed_at&.strftime("%B %d, %Y %H:%M:%S") || "Not deployed yet" %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Lottery Name</p>
+            <p class="font-medium"><%= @lottery.name %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Status</p>
+            <p class="font-medium">
+              <% case @lottery.status %>
+              <% when 'draft' %>
+                <span class="text-gray-600 font-bold">Draft</span>
+              <% when 'active' %>
+                <span class="text-green-600 font-bold">Active</span>
+              <% when 'paused' %>
+                <span class="text-yellow-600 font-bold">Paused</span>
+              <% when 'ended' %>
+                <span class="text-red-600 font-bold">Ended</span>
+              <% else %>
+                <span class="text-blue-600 font-bold"><%= @lottery.status.humanize %></span>
+              <% end %>
+            </p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-6 pb-6 border-b">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Contract Parameters</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Odds</p>
+            <p class="font-medium"><%= odds_verification(@lottery.odds_json) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Payout Strategy</p>
+            <p class="font-medium"><%= @lottery.payout_strategy.humanize %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Minimum Bet</p>
+            <p class="font-medium"><%= number_to_currency(@lottery.min_bet_amount) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Maximum Bet</p>
+            <p class="font-medium"><%= number_to_currency(@lottery.max_bet_amount) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Is Endless</p>
+            <p class="font-medium"><%= @lottery.endless? ? "Yes" : "No" %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Cycle Duration</p>
+            <p class="font-medium"><%= @lottery.cycle_duration ? "#{@lottery.cycle_duration} hours" : "N/A" %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8 bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">How Contract Verification Works</h3>
+        <p class="text-gray-600 text-sm">
+          In our MVP, smart contracts are simulated with cryptographic hashes for transparency.
+          In Phase 2, all lotteries will be deployed as actual smart contracts on the Polkadot blockchain
+          with real contract addresses that can be independently verified on any blockchain explorer.
+          The contract parameters are immutable once deployed, ensuring fairness and transparency.
+        </p>
+      </div>
+      
+      <div class="mt-6 flex justify-between items-center">
+        <%= link_to "Back to Lottery", lottery_path(@lottery), class: "text-blue-600 hover:text-blue-800" %>
+        <%= link_to "View on Blockchain", "#", class: "px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700", data: { controller: "tooltip", tooltip_content: "This would link to a blockchain explorer in Phase 2" } %>
+      </div>
+    </div>
+  </div>
+</div>

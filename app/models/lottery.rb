@@ -1,0 +1,58 @@
+class Lottery < ApplicationRecord
+  belongs_to :created_by, class_name: "User"
+
+  # Associations
+  has_many :bets, dependent: :nullify
+  has_many :drawn_numbers, dependent: :destroy
+  has_many :payout_logs, dependent: :nullify
+
+  # Enums
+  enum "status", { draft: 0, active: 1, ended: 2 }
+  enum "payout_strategy", { pool: 0, owner: 1, split_payout: 2 }
+  enum "visibility", { private_lottery: 0, public_lottery: 1 }
+
+  # Validations
+  validates :name, presence: true
+  validates :description, presence: true
+  validates :cycles_count, numericality: { greater_than: 0 }, if: -> { !is_endless }
+  validates :reinvestment_ratio, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 1 }
+  validates :odds_json, presence: true
+  validates :max_numbers_to_draw, numericality: { greater_than: 0, only_integer: true }
+  validates :cost_per_number, numericality: { greater_than: 0 }
+  validate :validate_odds_json
+
+  # Scopes
+  scope :active_lotteries, -> { where(status: :active, visibility: :public_lottery) }
+  scope :jackpot_lottery, -> { active_lotteries.order(current_payout: :desc).first }
+
+  # Callbacks
+  before_save :set_default_values
+
+  private
+
+  def set_default_values
+    self.status ||= :draft
+    self.visibility ||= :private_lottery
+    self.payout_strategy ||= :pool
+  end
+
+  def validate_odds_json
+    return if odds_json.blank?
+
+    # Ensure odds_json is a valid JSON object
+    unless odds_json.is_a?(Hash)
+      errors.add(:odds_json, "must be a valid JSON object")
+      return
+    end
+
+    # Validate that win probability is not unreasonably high
+    if odds_json["win_probability"].present? && odds_json["win_probability"].to_f > 0.99
+      errors.add(:odds_json, "win probability cannot exceed 99%")
+    end
+
+    # Validate that payout percentage is reasonable
+    if odds_json["payout_percentage"].present? && odds_json["payout_percentage"].to_f <= 0
+      errors.add(:odds_json, "payout percentage must be greater than 0%")
+    end
+  end
+end

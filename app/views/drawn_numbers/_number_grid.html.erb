@@ -1,0 +1,28 @@
+<div class="bg-white rounded-lg shadow p-6 mb-6">
+  <div class="flex justify-between items-center mb-4">
+    <h3 class="text-lg font-medium text-gray-900">Number Grid</h3>
+    <span class="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+      <%= bet.drawn_numbers.count %> / <%= bet.lottery.max_numbers_to_draw %> drawn
+    </span>
+  </div>
+  
+  <div class="grid grid-cols-10 gap-2">
+    <% (1..100).each do |num| %>
+      <% is_drawn = bet.drawn_numbers.pluck(:number).include?(num) %>
+      <div class="<%= is_drawn ? 'bg-blue-500 text-white' : 'bg-gray-100 text-gray-700' %> rounded-md h-10 flex items-center justify-center font-medium <%= is_drawn ? 'animate-pulse' : '' %>">
+        <%= num %>
+      </div>
+    <% end %>
+  </div>
+  
+  <div class="mt-4 flex justify-between text-sm text-gray-500">
+    <div class="flex items-center">
+      <div class="w-4 h-4 bg-blue-500 rounded-sm mr-2"></div>
+      <span>Drawn</span>
+    </div>
+    <div class="flex items-center">
+      <div class="w-4 h-4 bg-gray-100 rounded-sm mr-2"></div>
+      <span>Available</span>
+    </div>
+  </div>
+</div>
