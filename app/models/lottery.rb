@@ -25,6 +25,21 @@ class Lottery < ApplicationRecord
   scope :active_lotteries, -> { where(status: :active, visibility: :public_lottery) }
   scope :jackpot_lottery, -> { active_lotteries.order(current_payout: :desc).first }
 
+  # Calculate the end date for the lottery
+  # For endless lotteries, returns a date 24 hours from now
+  # For non-endless lotteries, returns the estimated end date based on deployment time and cycles
+  def end_date
+    if is_endless
+      # For endless lotteries, just return 24 hours from now (next cycle)
+      Time.current + 24.hours
+    else
+      # For non-endless lotteries with a deployment time, calculate based on cycles
+      # Each cycle is assumed to be 24 hours
+      return nil unless deployed_at
+      deployed_at + (24.hours * cycles_count)
+    end
+  end
+
   # Callbacks
   before_save :set_default_values
 

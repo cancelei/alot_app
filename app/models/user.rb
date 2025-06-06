@@ -10,6 +10,14 @@ class User < ApplicationRecord
   # Validations
   validates :email, presence: true, uniqueness: true
   validates :name, presence: true, length: { minimum: 2, maximum: 50 }, allow_blank: false
+  validates :username, presence: true, uniqueness: true,
+            length: { minimum: 3, maximum: 30 },
+            format: { with: /\A[a-zA-Z0-9_]+\z/, message: "only allows letters, numbers, and underscores" },
+            allow_blank: false,
+            if: :username_required?
+
+  # Prevent username from being changed after creation
+  attr_readonly :username
 
   # Set default role
   after_initialize :set_default_role, if: :new_record?
@@ -37,5 +45,9 @@ class User < ApplicationRecord
 
   def set_default_role
     self.role ||= :player
+  end
+
+  def username_required?
+    new_record? || username_changed?
   end
 end

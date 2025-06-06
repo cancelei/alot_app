@@ -2,9 +2,10 @@ class Bet < ApplicationRecord
   belongs_to :player, class_name: "User"
   belongs_to :lottery
   has_many :drawn_numbers, dependent: :destroy
+  has_many :payout_logs, dependent: :nullify
 
   # Enums
-  enum "result", { pending: 0, won: 1, lost: 2 }
+  enum "result", { pending: 0, won: 1, lost: 2, failed: 3 }
 
   # Validations
   validates :amount, presence: true, numericality: { greater_than: 0 }
@@ -15,7 +16,18 @@ class Bet < ApplicationRecord
   scope :pending_bets, -> { where(result: :pending) }
   scope :won_bets, -> { where(result: :won) }
   scope :lost_bets, -> { where(result: :lost) }
+  scope :failed_bets, -> { where(result: :failed) }
   scope :confirmed_bets, -> { where(confirmed_on_chain: true) }
+
+  # Alias for player to maintain compatibility with views expecting 'user'
+  def user
+    player
+  end
+
+  # Check if the bet has been paid out
+  def paid_out?
+    payout_logs.exists?
+  end
 
   # Instance methods
   def winning_numbers

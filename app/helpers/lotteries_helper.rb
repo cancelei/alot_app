@@ -13,16 +13,24 @@ module LotteriesHelper
   # @param bet [Bet] the bet object
   # @return [String] HTML for the bet status badge
   def bet_status_badge(bet)
-    status_class = case bet.status
-    when "active"
-                     "bg-green-100 text-green-800"
-    when "pending"
-                     "bg-yellow-100 text-yellow-800"
+    if !bet.confirmed_on_chain?
+      status = "pending"
+      status_class = "bg-yellow-100 text-yellow-800"
+    elsif bet.won?
+      status = "won"
+      status_class = "bg-green-100 text-green-800"
+    elsif bet.lost?
+      status = "lost"
+      status_class = "bg-red-100 text-red-800"
+    elsif bet.paid_out?
+      status = "paid out"
+      status_class = "bg-blue-100 text-blue-800"
     else
-                     "bg-gray-100 text-gray-800"
+      status = "confirmed"
+      status_class = "bg-gray-100 text-gray-800"
     end
 
-    content_tag(:span, bet.status.humanize,
+    content_tag(:span, status.humanize,
       class: "px-2 py-1 rounded-full text-xs font-medium #{status_class}")
   end
 

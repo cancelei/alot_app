@@ -17,4 +17,9 @@ class PayoutLog < ApplicationRecord
   def verified_on_chain?
     transaction_hash.present?
   end
+
+  # Alias for compatibility with views
+  def confirmed_on_chain?
+    verified_on_chain?
+  end
 end

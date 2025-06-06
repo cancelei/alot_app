@@ -29,18 +29,26 @@ class Admin::ReportsController < ApplicationController
     # Get bet statistics
     @total_bets = Bet.count
     @total_bet_amount = Bet.sum(:amount)
-    @average_bet_amount = Bet.average(:amount)
+    @avg_bet_amount = Bet.average(:amount) || 0
+    @confirmed_bets = Bet.confirmed_bets.count
+    @win_rate = LotteryStatisticsService.new.calculate_win_rate
 
-    # Get bet statistics by result
-    @won_bets = Bet.won_bets.count
-    @lost_bets = Bet.lost_bets.count
-    @pending_bets = Bet.pending_bets.count
-    @failed_bets = Bet.failed_bets.count
+    # Get bet statistics by result for chart
+    @won_bets_count = Bet.won_bets.count
+    @lost_bets_count = Bet.lost_bets.count
+    @pending_bets_count = Bet.pending_bets.count
 
-    # Get bets by date (last 30 days)
+    # Get recent bets for table
+    @recent_bets = Bet.includes(:player, :lottery).order(created_at: :desc).limit(10)
+
+    # Get bets by date (last 30 days) for trends
     @bets_by_date = Bet.where(created_at: 30.days.ago..)
       .group("DATE(created_at)")
       .count
+
+    # Get daily bet count and volume for the chart
+    @daily_bet_count = Bet.where(created_at: 1.day.ago..).count
+    @daily_bet_volume = Bet.where(created_at: 1.day.ago..).sum(:amount)
 
     # Get bets by lottery
     @bets_by_lottery = Lottery.select("lotteries.*, COUNT(bets.id) as bet_count")
@@ -52,21 +60,30 @@ class Admin::ReportsController < ApplicationController
   def payouts
     # Get payout statistics
     @total_payouts = PayoutLog.count
-    @total_payout_amount = PayoutLog.sum(:amount)
-    @average_payout_amount = PayoutLog.average(:amount)
+    @total_payout_amount = PayoutLog.sum(:amount) || 0
+    @avg_payout_amount = PayoutLog.average(:amount) || 0
+    @total_reinvestment_amount = PayoutLog.where(reinvested: true).sum(:amount) || 0
+
+    # Get recent payouts for table
+    @recent_payouts = PayoutLog.includes(:player, :lottery).order(created_at: :desc).limit(10)
 
     # Get payouts by date (last 30 days)
     @payouts_by_date = PayoutLog.where(created_at: 30.days.ago..)
       .group("DATE(created_at)")
       .sum(:amount)
 
-    # Get top payouts
-    @top_payouts = PayoutLog.order(amount: :desc).limit(10)
+    # Get monthly payout and reinvestment amounts for the chart
+    @monthly_payout_amount = PayoutLog.where(created_at: 1.month.ago..).sum(:amount)
+    @monthly_reinvestment_amount = PayoutLog.where(created_at: 1.month.ago.., reinvested: true).sum(:amount)
 
-    # Get payouts by lottery
-    @payouts_by_lottery = Lottery.select("lotteries.*, SUM(payout_logs.amount) as payout_amount")
+    # Get payouts by lottery for the pie chart
+    lottery_payouts = Lottery.select("lotteries.name, SUM(payout_logs.amount) as payout_amount")
       .joins(:payout_logs)
-      .group("lotteries.id")
+      .group("lotteries.id, lotteries.name")
       .order("payout_amount DESC")
+      .limit(6)
+
+    @lottery_names = lottery_payouts.map(&:name)
+    @lottery_payout_amounts = lottery_payouts.map(&:payout_amount)
   end
 end

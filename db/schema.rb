@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_06_043646) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_06_172158) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -70,6 +70,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_043646) do
     t.datetime "updated_at", null: false
     t.integer "max_numbers_to_draw", default: 5
     t.decimal "cost_per_number", precision: 15, scale: 2, default: "1.0"
+    t.jsonb "verification_data"
     t.index ["created_by_id"], name: "index_lotteries_on_created_by_id"
   end
 
@@ -82,6 +83,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_043646) do
     t.integer "cycle_number"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "reinvested", default: false
     t.index ["bet_id"], name: "index_payout_logs_on_bet_id"
     t.index ["lottery_id"], name: "index_payout_logs_on_lottery_id"
     t.index ["player_id"], name: "index_payout_logs_on_player_id"
@@ -97,8 +99,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_06_043646) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "name"
+    t.string "username"
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["username"], name: "index_users_on_username", unique: true
   end
 
   add_foreign_key "bets", "lotteries"

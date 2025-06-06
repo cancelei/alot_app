@@ -25,7 +25,7 @@ class LotteryStatisticsService
       "lotteries.*, " \
       "COUNT(DISTINCT bets.id) as bet_count, " \
       "SUM(bets.amount) as total_bet_amount, " \
-      "COUNT(DISTINCT bets.user_id) as unique_players"
+      "COUNT(DISTINCT bets.player_id) as unique_players"
     )
     .left_joins(:bets)
     .group("lotteries.id")
@@ -75,6 +75,29 @@ class LotteryStatisticsService
     }
   end
 
+  # Calculate player retention rate
+  def calculate_player_retention
+    # Players who placed bets in both the previous and current time periods
+    previous_period = (@time_period * 2).ago..@time_period.ago
+    current_period = @time_period.ago..Time.current
+
+    previous_players = User.player
+      .joins(:bets)
+      .where(bets: { created_at: previous_period })
+      .distinct
+
+    retained_players = previous_players
+      .joins(:bets)
+      .where(bets: { created_at: current_period })
+      .distinct
+      .count
+
+    previous_count = previous_players.count
+    return 0 if previous_count == 0
+
+    (retained_players.to_f / previous_count) * 100
+  end
+
   private
 
   # Count active players (placed a bet in the time period)
@@ -114,28 +137,5 @@ class LotteryStatisticsService
       .group("users.id")
       .order("win_count DESC")
       .limit(10)
-  end
-
-  # Calculate player retention rate
-  def calculate_player_retention
-    # Players who placed bets in both the previous and current time periods
-    previous_period = (@time_period * 2).ago..@time_period.ago
-    current_period = @time_period.ago..Time.current
-
-    previous_players = User.player
-      .joins(:bets)
-      .where(bets: { created_at: previous_period })
-      .distinct
-
-    retained_players = previous_players
-      .joins(:bets)
-      .where(bets: { created_at: current_period })
-      .distinct
-      .count
-
-    previous_count = previous_players.count
-    return 0 if previous_count == 0
-
-    (retained_players.to_f / previous_count) * 100
   end
 end
