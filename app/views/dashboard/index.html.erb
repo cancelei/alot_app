@@ -119,7 +119,7 @@
         <% Lottery.active_lotteries.limit(3).each do |lottery| %>
           <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
             <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-500 to-purple-600">
-              <h3 class="text-lg font-medium text-white"><%= lottery.title %></h3>
+              <h3 class="text-lg font-medium text-white"><%= lottery.name %></h3>
             </div>
             <div class="px-4 py-5 sm:p-6">
               <div class="space-y-4">
