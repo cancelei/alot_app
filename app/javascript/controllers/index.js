@@ -10,11 +10,20 @@ application.register("admin-dashboard", AdminDashboardController)
 import BettingFormController from "./betting_form_controller"
 application.register("betting-form", BettingFormController)
 
+import DropdownController from "./dropdown_controller"
+application.register("dropdown", DropdownController)
+
 import FeatureRequestController from "./feature_request_controller"
 application.register("feature-request", FeatureRequestController)
 
 import HelloController from "./hello_controller"
 application.register("hello", HelloController)
+
+import MobileMenuController from "./mobile_menu_controller"
+application.register("mobile-menu", MobileMenuController)
+
+import ProfileController from "./profile_controller"
+application.register("profile", ProfileController)
 
 import ModalController from "./modal_controller"
 application.register("modal", ModalController)

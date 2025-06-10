@@ -132,7 +132,11 @@
                 <div>
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-500">Time Remaining:</span>
-                    <span class="font-medium text-gray-900" data-controller="countdown" data-countdown-target="timer" data-countdown-end-value="<%= lottery.next_draw_at.to_i * 1000 %>"></span>
+                    <% if lottery.next_draw_at.present? %>
+                      <span class="font-medium text-gray-900" data-controller="countdown" data-countdown-target="timer" data-countdown-end-value="<%= lottery.next_draw_at.to_i * 1000 %>"></span>
+                    <% else %>
+                      <span class="font-medium text-gray-500">Not scheduled</span>
+                    <% end %>
                   </div>
                 </div>
                 <div class="pt-4">

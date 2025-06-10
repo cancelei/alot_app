@@ -22,7 +22,14 @@
     <%= javascript_include_tag "application", "data-turbo-track": "reload", type: "module" %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-gray-50">
+    <% if user_signed_in? || current_page?(root_path) || current_page?(new_user_session_path) || current_page?(new_user_registration_path) %>
+      <%= render 'shared/navbar' %>
+      <div class="pt-16"> <!-- Add padding to account for fixed navbar -->
+        <%= yield %>
+      </div>
+    <% else %>
+      <%= yield %>
+    <% end %>
   </body>
 </html>
