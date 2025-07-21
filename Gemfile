@@ -17,6 +17,16 @@ gem "stimulus-rails"
 # Bundle and process CSS [https://github.com/rails/cssbundling-rails]
 gem "cssbundling-rails"
 
+# Authentication
+gem "devise"
+gem "devise-i18n"
+
+# Authorization
+gem "pundit"
+
+# Forms and UI
+gem "simple_form"
+
 # Use Active Model has_secure_password [https://guides.rubyonrails.org/active_model_basics.html#securepassword]
 # gem "bcrypt", "~> 3.1.7"
 

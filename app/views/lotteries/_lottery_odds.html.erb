@@ -1,0 +1,29 @@
+<%# Lottery odds partial %>
+<div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+  <div class="p-6">
+    <h2 class="text-lg font-semibold text-gray-800 mb-4">Lottery Odds</h2>
+    
+    <div class="space-y-4">
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Win Probability</h3>
+        <p class="mt-1 text-lg font-semibold text-black">
+          <%= format_win_probability(lottery) %>
+        </p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Minimum Bet</h3>
+        <p class="mt-1 text-lg font-semibold text-black">
+          <%= number_to_currency(lottery.odds_json["min_bet"]) %>
+        </p>
+      </div>
+      
+      <div>
+        <h3 class="text-sm font-medium text-gray-500">Payout Multiplier</h3>
+        <p class="mt-1 text-lg font-semibold text-black">
+          <%= lottery.odds_json["payout_multiplier"] %>x
+        </p>
+      </div>
+    </div>
+  </div>
+</div>

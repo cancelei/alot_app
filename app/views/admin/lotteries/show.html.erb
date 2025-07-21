@@ -1,0 +1,390 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center">
+      <%= link_to admin_lotteries_path, class: "mr-4 text-gray-600 hover:text-gray-900" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-800"><%= @lottery.name %></h1>
+    </div>
+    
+    <div class="flex items-center space-x-3">
+      <% case @lottery.status %>
+      <% when "draft" %>
+        <span class="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-sm font-medium">Draft</span>
+      <% when "active" %>
+        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Active</span>
+      <% when "ended" %>
+        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">Ended</span>
+      <% end %>
+      
+      <% if @lottery.draft? %>
+        <%= button_to publish_admin_lottery_path(@lottery), method: :post, class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center" do %>
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          Publish
+        <% end %>
+      <% end %>
+      
+      <% if @lottery.active? && @lottery.smart_contract_address.blank? %>
+        <%= button_to deploy_contract_admin_lottery_path(@lottery), method: :post, class: "px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center" do %>
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+          </svg>
+          Deploy Contract
+        <% end %>
+      <% end %>
+      
+      <% if @lottery.draft? %>
+        <%= link_to edit_admin_lottery_path(@lottery), class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center" do %>
+          <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
+          </svg>
+          Edit
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <!-- Main lottery details -->
+    <div class="md:col-span-2 space-y-6">
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Lottery Details</h2>
+          
+          <div class="prose max-w-none">
+            <%= simple_format(@lottery.description) %>
+          </div>
+          
+          <div class="mt-6 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Lottery ID</h3>
+              <p class="mt-1 text-sm text-gray-900">#<%= @lottery.id %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Created By</h3>
+              <p class="mt-1 text-sm text-gray-900"><%= @lottery.created_by.email %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Created On</h3>
+              <p class="mt-1 text-sm text-gray-900"><%= @lottery.created_at.strftime("%b %d, %Y at %H:%M") %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Visibility</h3>
+              <p class="mt-1 text-sm text-gray-900"><%= @lottery.visibility.humanize %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Payout Strategy</h3>
+              <p class="mt-1 text-sm text-gray-900"><%= @lottery.payout_strategy.humanize %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Duration</h3>
+              <p class="mt-1 text-sm text-gray-900">
+                <% if @lottery.is_endless %>
+                  Endless
+                <% else %>
+                  <%= pluralize(@lottery.cycles_count, 'cycle') %>
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <% if @lottery.smart_contract_address.present? %>
+        <div class="bg-white rounded-lg shadow overflow-hidden">
+          <div class="p-6">
+            <h2 class="text-lg font-semibold text-gray-800 mb-4">Blockchain Details</h2>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Smart Contract Address</h3>
+                <div class="mt-1 flex items-center">
+                  <code class="text-sm bg-gray-100 px-2 py-1 rounded"><%= @lottery.smart_contract_address %></code>
+                  <button class="ml-2 text-blue-600 hover:text-blue-800" onclick="navigator.clipboard.writeText('<%= @lottery.smart_contract_address %>')">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+              
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Deployed At</h3>
+                <p class="mt-1 text-sm text-gray-900"><%= @lottery.deployed_at&.strftime("%b %d, %Y at %H:%M") || 'Not yet deployed' %></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    
+    <!-- Sidebar with stats and odds -->
+    <div class="space-y-6">
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Lottery Stats</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Current Payout</h3>
+              <p class="mt-1 text-2xl font-semibold text-gray-900"><%= number_to_currency(@lottery.current_payout) %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Reinvestment Ratio</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_percentage(@lottery.reinvestment_ratio * 100, precision: 1) %></p>
+            </div>
+            
+            <% if @lottery.bets.any? %>
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Total Bets</h3>
+                <p class="mt-1 text-lg font-semibold text-gray-900"><%= @lottery.bets.count %></p>
+              </div>
+              
+              <div>
+                <h3 class="text-sm font-medium text-gray-500">Total Bet Amount</h3>
+                <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(@lottery.bets.sum(:amount)) %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Number Drawing Configuration</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Maximum Numbers to Draw</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= @lottery.max_numbers_to_draw %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Cost Per Number</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(@lottery.cost_per_number) %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Maximum Potential Cost</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(@lottery.cost_per_number * @lottery.max_numbers_to_draw) %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="bg-white rounded-lg shadow overflow-hidden mt-6">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Lottery Odds</h2>
+          
+          <div class="space-y-4">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Win Probability</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_percentage(@lottery.odds_json["win_probability"] * 100, precision: 2) %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Payout Multiplier</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= @lottery.odds_json["payout_multiplier"] %>x</p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Minimum Bet</h3>
+              <p class="mt-1 text-lg font-semibold text-gray-900"><%= number_to_currency(@lottery.odds_json["min_bet"]) %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Lottery Rounds & Participants Statistics -->
+  <div class="mt-8">
+    <h2 class="text-xl font-bold text-gray-800 mb-4">Lottery Statistics</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Participant Statistics -->
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Participant Statistics</h3>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Total Participants</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900"><%= @lottery.bets.select(:player_id).distinct.count %></p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Total Bets</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900"><%= @lottery.bets.count %></p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Average Bet Amount</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900">
+                <% if @lottery.bets.any? %>
+                  <%= number_to_currency(@lottery.bets.average(:amount)) %>
+                <% else %>
+                  N/A
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Total Bet Volume</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900">
+                <%= number_to_currency(@lottery.bets.sum(:amount)) %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Round Statistics -->
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="p-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-4">Round Statistics</h3>
+          
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Total Rounds Completed</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900"><%= @lottery.payout_logs.select(:cycle_number).distinct.count %></p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Total Payouts</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900"><%= number_to_currency(@lottery.payout_logs.sum(:amount)) %></p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Average Payout</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900">
+                <% if @lottery.payout_logs.any? %>
+                  <%= number_to_currency(@lottery.payout_logs.average(:amount)) %>
+                <% else %>
+                  N/A
+                <% end %>
+              </p>
+            </div>
+            
+            <div>
+              <h4 class="text-sm font-medium text-gray-500">Average Bets per Round</h4>
+              <p class="mt-1 text-xl font-semibold text-gray-900">
+                <% if @lottery.payout_logs.any? %>
+                  <%= (@lottery.bets.count.to_f / @lottery.payout_logs.select(:cycle_number).distinct.count).round(1) %>
+                <% else %>
+                  N/A
+                <% end %>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Recent Bets -->
+  <% if @lottery.bets.any? %>
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Recent Bets</h2>
+      
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @lottery.bets.order(created_at: :desc).limit(10).each do |bet| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#<%= bet.id %></td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><%= bet.user.email %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= number_to_currency(bet.amount) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if bet.confirmed_on_chain? %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= bet.created_at.strftime("%b %d, %Y") %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  
+  <!-- Payout Logs -->
+  <% if @lottery.payout_logs.any? %>
+    <div class="mt-8">
+      <h2 class="text-xl font-bold text-gray-800 mb-4">Payout History</h2>
+      
+      <div class="bg-white rounded-lg shadow overflow-hidden">
+        <div class="overflow-x-auto">
+          <table class="min-w-full divide-y divide-gray-200">
+            <thead class="bg-gray-50">
+              <tr>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Round</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Winner</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+              </tr>
+            </thead>
+            <tbody class="bg-white divide-y divide-gray-200">
+              <% @lottery.payout_logs.order(created_at: :desc).each do |payout| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">#<%= payout.id %></td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= payout.cycle_number %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><%= payout.user&.email || 'System' %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= number_to_currency(payout.amount) %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <% if payout.confirmed_on_chain? %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">Confirmed</span>
+                    <% else %>
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending</span>
+                    <% end %>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                    <%= payout.created_at.strftime("%b %d, %Y") %>
+                  </td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

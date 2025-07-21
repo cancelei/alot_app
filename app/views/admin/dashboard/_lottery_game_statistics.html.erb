@@ -1,0 +1,95 @@
+<%# Lottery Game Feature Requests Statistics Partial %>
+<div class="bg-white rounded-lg shadow p-6">
+  <div class="flex items-center justify-between mb-4">
+    <div>
+      <h2 class="text-lg font-semibold text-gray-800">Lottery Game Feature Requests</h2>
+      <p class="text-sm text-gray-500 mt-1">Overview of lottery game feature requests and their distribution</p>
+    </div>
+    <%= link_to admin_feature_requests_path(category: 'lottery_game'), class: "text-sm text-indigo-600 hover:text-indigo-900 flex items-center" do %>
+      View All
+      <svg class="w-4 h-4 ml-1" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
+      </svg>
+    <% end %>
+  </div>
+
+  <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+    <%= link_to admin_feature_requests_path(category: 'lottery_game'), class: "bg-indigo-50 rounded-lg p-4 transition hover:bg-indigo-100" do %>
+      <div class="text-sm font-medium text-indigo-500 mb-1">Total Requests</div>
+      <div class="text-2xl font-bold text-indigo-700"><%= FeatureRequest.lottery_games.count %></div>
+      <div class="text-xs text-indigo-400 mt-1">All lottery game requests</div>
+    <% end %>
+    
+    <%= link_to admin_feature_requests_path(category: 'lottery_game', status: 'pending_review'), class: "bg-yellow-50 rounded-lg p-4 transition hover:bg-yellow-100" do %>
+      <div class="text-sm font-medium text-yellow-500 mb-1">Pending</div>
+      <div class="text-2xl font-bold text-yellow-700"><%= FeatureRequest.lottery_games.pending_review.count %></div>
+      <div class="text-xs text-yellow-400 mt-1">Awaiting review</div>
+    <% end %>
+    
+    <%= link_to admin_feature_requests_path(category: 'lottery_game', status: 'approved'), class: "bg-green-50 rounded-lg p-4 transition hover:bg-green-100" do %>
+      <div class="text-sm font-medium text-green-500 mb-1">Approved</div>
+      <div class="text-2xl font-bold text-green-700"><%= FeatureRequest.lottery_games.approved.count %></div>
+      <div class="text-xs text-green-400 mt-1">Ready for implementation</div>
+    <% end %>
+    
+    <%= link_to admin_feature_requests_path(category: 'lottery_game', status: 'shipped'), class: "bg-purple-50 rounded-lg p-4 transition hover:bg-purple-100" do %>
+      <div class="text-sm font-medium text-purple-500 mb-1">Shipped</div>
+      <div class="text-2xl font-bold text-purple-700"><%= FeatureRequest.lottery_games.shipped.count %></div>
+      <div class="text-xs text-purple-400 mt-1">Live on platform</div>
+    <% end %>
+  </div>
+
+  <div class="mt-6">
+    <h3 class="text-sm font-medium text-gray-700 mb-3">Popular Game Types</h3>
+    <div class="space-y-3">
+      <% game_types = [
+        { name: 'Scratch Card', slug: 'scratch_card', color: 'orange' },
+        { name: 'Powerball', slug: 'powerball', color: 'red' },
+        { name: 'Keno', slug: 'keno', color: 'blue' },
+        { name: 'Daily Draw', slug: 'daily_draw', color: 'green' }
+      ] %>
+      <% game_types.each do |game| %>
+        <% count = FeatureRequest.lottery_games.where("title ILIKE ? OR description ILIKE ?", "%#{game[:name]}%", "%#{game[:name]}%").count %>
+        <div class="flex items-center">
+          <div class="w-32 text-sm font-medium text-gray-700"><%= game[:name] %></div>
+          <div class="flex-1 relative">
+            <div class="bg-gray-200 rounded-full h-3">
+              <% percentage = FeatureRequest.lottery_games.count > 0 ? (count.to_f / FeatureRequest.lottery_games.count * 100).round : 0 %>
+              <div class="bg-#{game[:color]}-500 h-3 rounded-full transition-all duration-500" style="width: <%= percentage %>%"></div>
+            </div>
+          </div>
+          <div class="ml-3 text-sm font-medium text-gray-700 w-16 flex justify-between items-center">
+            <span><%= count %></span>
+            <%= link_to admin_feature_requests_path(category: 'lottery_game', game_type: game[:slug]), 
+                        class: "text-#{game[:color]}-600 hover:text-#{game[:color]}-800" do %>
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+              </svg>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="mt-6 border-t border-gray-200 pt-4">
+    <div class="flex justify-between items-center">
+      <h3 class="text-sm font-medium text-gray-700">Recent Activity</h3>
+      <div class="text-xs text-gray-500">Last 7 days</div>
+    </div>
+    <div class="mt-3 grid grid-cols-7 gap-1">
+      <% 7.downto(0) do |i| %>
+        <% day = Date.today - i.days %>
+        <% count = FeatureRequest.lottery_games.where(created_at: day.beginning_of_day..day.end_of_day).count %>
+        <div class="flex flex-col items-center">
+          <div class="text-xs text-gray-500"><%= day.strftime("%a")[0] %></div>
+          <div class="w-full mt-1">
+            <div class="bg-indigo-<%= count > 0 ? (100 + [count * 100, 800].min) : 100 %> h-8 rounded-sm"></div>
+          </div>
+          <div class="text-xs font-medium text-gray-700 mt-1"><%= count %></div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

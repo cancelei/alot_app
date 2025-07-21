@@ -1,0 +1,99 @@
+<%# Admin dashboard statistics partial %>
+<div id="dashboard-stats" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+  <%# Platform Overview Card %>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Platform Overview</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Players</span>
+        <span class="font-semibold"><%= platform_stats[:total_players] %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Active Players</span>
+        <span class="font-semibold"><%= platform_stats[:active_players] %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Bets</span>
+        <span class="font-semibold"><%= total_bets %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Volume</span>
+        <span class="font-semibold"><%= number_to_currency(total_bet_amount) %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Win Rate</span>
+        <span class="font-semibold"><%= number_to_percentage(platform_stats[:win_rate], precision: 2) %></span>
+      </div>
+    </div>
+  </div>
+
+  <%# Lottery Statistics Card %>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Lottery Statistics</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Lotteries</span>
+        <span class="font-semibold"><%= total_lotteries %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Active</span>
+        <span class="font-semibold text-green-600"><%= active_lotteries %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Draft</span>
+        <span class="font-semibold text-yellow-600"><%= draft_lotteries %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Ended</span>
+        <span class="font-semibold text-red-600"><%= ended_lotteries %></span>
+      </div>
+    </div>
+  </div>
+
+  <%# Bet Statistics Card %>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Bet Statistics</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Bets</span>
+        <span class="font-semibold"><%= total_bets %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Pending</span>
+        <span class="font-semibold text-yellow-600"><%= pending_bets %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Won</span>
+        <span class="font-semibold text-green-600"><%= won_bets %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Lost</span>
+        <span class="font-semibold text-red-600"><%= lost_bets %></span>
+      </div>
+    </div>
+  </div>
+
+  <%# Financial Statistics Card %>
+  <div class="bg-white rounded-lg shadow p-6">
+    <h3 class="text-lg font-semibold text-gray-800 mb-4">Financial Statistics</h3>
+    <div class="space-y-3">
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Volume</span>
+        <span class="font-semibold"><%= number_to_currency(total_bet_amount) %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Total Payouts</span>
+        <span class="font-semibold text-green-600"><%= number_to_currency(platform_stats[:total_payouts]) %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Platform Revenue</span>
+        <span class="font-semibold text-blue-600"><%= number_to_currency(total_bet_amount - platform_stats[:total_payouts]) %></span>
+      </div>
+      <div class="flex justify-between items-center">
+        <span class="text-gray-600">Payout Ratio</span>
+        <% payout_ratio = total_bet_amount > 0 ? (platform_stats[:total_payouts] / total_bet_amount) * 100 : 0 %>
+        <span class="font-semibold"><%= number_to_percentage(payout_ratio, precision: 2) %></span>
+      </div>
+    </div>
+  </div>
+</div>

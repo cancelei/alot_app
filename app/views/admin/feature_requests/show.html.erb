@@ -1,0 +1,152 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <div class="flex items-center">
+      <%= link_to admin_feature_requests_path, class: "mr-4 text-gray-600 hover:text-gray-900" do %>
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-800">Feature Request #<%= @feature_request.id %></h1>
+    </div>
+    
+    <div>
+      <% case @feature_request.status %>
+      <% when 'pending_review' %>
+        <span class="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-sm font-medium">Pending Review</span>
+      <% when 'approved' %>
+        <span class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Approved</span>
+      <% when 'rejected' %>
+        <span class="px-3 py-1 bg-red-100 text-red-800 rounded-full text-sm font-medium">Rejected</span>
+      <% when 'shipped' %>
+        <span class="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-medium">Shipped</span>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+    <div class="p-6">
+      <h2 class="text-xl font-bold text-gray-800 mb-2"><%= @feature_request.title %></h2>
+      
+      <div class="flex items-center text-sm text-gray-500 mb-6">
+        <div class="flex items-center mr-6">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+          </svg>
+          <span><%= @feature_request.submitted_by&.name || @feature_request.submitted_by&.email || 'Anonymous' %></span>
+        </div>
+        
+        <div class="flex items-center">
+          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+          </svg>
+          <span><%= @feature_request.created_at.strftime("%b %d, %Y") %></span>
+        </div>
+      </div>
+      
+      <div class="prose max-w-none">
+        <%= simple_format(@feature_request.description) %>
+      </div>
+      
+      <% if @feature_request.attachments.attached? %>
+        <div class="mt-6">
+          <h3 class="text-lg font-semibold text-gray-800 mb-2">Attachments</h3>
+          <div class="flex flex-wrap gap-4">
+            <% @feature_request.attachments.each do |attachment| %>
+              <div class="bg-gray-100 rounded p-3 flex items-center">
+                <svg class="w-5 h-5 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"></path>
+                </svg>
+                <%= link_to attachment.filename, rails_blob_path(attachment, disposition: "attachment"), class: "text-blue-600 hover:text-blue-800" %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Admin Notes</h3>
+      
+      <div class="mb-6">
+        <% if @feature_request.admin_notes.present? %>
+          <div class="bg-gray-50 p-4 rounded-lg">
+            <%= simple_format(@feature_request.admin_notes) %>
+          </div>
+        <% else %>
+          <p class="text-gray-500 italic">No admin notes yet.</p>
+        <% end %>
+      </div>
+      
+      <%= form_with model: [:admin, @feature_request], local: true, class: "space-y-4" do |f| %>
+        <div>
+          <%= f.label :admin_notes, class: "block text-sm font-medium text-gray-700 mb-1" %>
+          <%= f.text_area :admin_notes, rows: 4, class: "shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" %>
+        </div>
+        
+        <div class="flex justify-end">
+          <%= f.submit "Update Notes", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Change Status</h3>
+      
+      <div class="flex flex-wrap gap-3">
+        <% if @feature_request.pending_review? %>
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'approved'), method: :patch, class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+            </svg>
+            Approve
+          <% end %>
+          
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'rejected'), method: :patch, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            Reject
+          <% end %>
+        <% end %>
+        
+        <% if @feature_request.approved? %>
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'shipped'), method: :patch, class: "px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z"></path>
+            </svg>
+            Mark as Shipped
+          <% end %>
+          
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'rejected'), method: :patch, class: "px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+            Reject
+          <% end %>
+        <% end %>
+        
+        <% if @feature_request.rejected? %>
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'pending_review'), method: :patch, class: "px-4 py-2 bg-yellow-600 text-white rounded hover:bg-yellow-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Move Back to Pending
+          <% end %>
+        <% end %>
+        
+        <% if @feature_request.shipped? %>
+          <%= button_to change_status_admin_feature_request_path(@feature_request, status: 'approved'), method: :patch, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center" do %>
+            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+            </svg>
+            Move Back to Approved
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

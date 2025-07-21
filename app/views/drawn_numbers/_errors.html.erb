@@ -1,0 +1,12 @@
+<% if drawn_number.errors.any? %>
+  <div id="number_draw_errors" class="bg-red-50 text-red-800 p-4 rounded mb-4">
+    <h3 class="text-lg font-medium mb-2">Error drawing number</h3>
+    <ul class="list-disc pl-5">
+      <% drawn_number.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+    </ul>
+  </div>
+<% else %>
+  <div id="number_draw_errors"></div>
+<% end %>

@@ -1,0 +1,19 @@
+<div class="bg-white border border-gray-200 rounded-lg shadow-sm overflow-hidden hover:shadow-md transition-shadow">
+  <div class="p-5">
+    <div class="flex justify-between items-start">
+      <h3 class="text-lg font-semibold text-gray-900 mb-1"><%= lottery.name %></h3>
+      <%= lottery_status_badge(lottery) %>
+    </div>
+    
+    <p class="text-sm text-gray-600 mb-4 line-clamp-2"><%= lottery.description.truncate(100) %></p>
+    
+    <div class="flex justify-between items-end">
+      <div>
+        <div class="text-xs text-gray-500">Current Payout</div>
+        <div class="text-lg font-semibold text-gray-900"><%= number_to_currency(lottery.current_payout) %></div>
+      </div>
+      
+      <%= link_to "View Details", lottery_path(lottery), class: "px-3 py-2 bg-blue-600 text-white text-sm rounded hover:bg-blue-700" %>
+    </div>
+  </div>
+</div>

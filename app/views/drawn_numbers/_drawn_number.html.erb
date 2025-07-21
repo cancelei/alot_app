@@ -1,0 +1,19 @@
+<div id="drawn-number-<%= drawn_number.id %>" class="bg-white rounded-lg shadow p-4 mb-2 border-l-4 <%= drawn_number.winning? ? 'border-green-500' : 'border-blue-500' %>">
+  <div class="flex items-center justify-between">
+    <div class="flex items-center">
+      <div class="<%= drawn_number.winning? ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800' %> rounded-full h-10 w-10 flex items-center justify-center font-bold text-lg <%= drawn_number.winning? ? 'animate-pulse' : '' %>">
+        <%= drawn_number.number %>
+      </div>
+      <div class="ml-3">
+        <div class="flex items-center">
+          <p class="text-sm font-medium text-gray-900">Number <%= drawn_number.number %></p>
+          <% if drawn_number.winning? %>
+            <span class="ml-2 px-2 py-0.5 bg-green-100 text-green-800 text-xs font-medium rounded-full">Winner!</span>
+          <% end %>
+        </div>
+        <p class="text-xs text-gray-500">Drawn at <%= drawn_number.created_at.strftime("%b %d, %Y %H:%M") %></p>
+      </div>
+    </div>
+    <p class="text-sm font-medium text-gray-900"><%= number_to_currency(drawn_number.bet.lottery.cost_per_number) %></p>
+  </div>
+</div>

@@ -1,0 +1,77 @@
+<%# Verification page for bet results %>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="bg-blue-600 p-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-white">Bet Result Verification</h1>
+        <%= verification_badge(@bet.confirmed_on_chain?) %>
+      </div>
+      <p class="text-blue-100 mt-2">
+        Transparent verification of bet result for transparency and fairness
+      </p>
+    </div>
+    
+    <div class="p-6">
+      <div class="mb-6 pb-6 border-b">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Bet Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Bet ID</p>
+            <p class="font-medium"><%= @bet.id %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Placed By</p>
+            <p class="font-medium"><%= @bet.user.name %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Lottery</p>
+            <p class="font-medium"><%= @bet.lottery.name %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Amount</p>
+            <p class="font-medium"><%= number_to_currency(@bet.amount) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Result</p>
+            <p class="font-medium">
+              <% if @bet.won? %>
+                <span class="text-green-600 font-bold">Won</span>
+              <% elsif @bet.lost? %>
+                <span class="text-red-600 font-bold">Lost</span>
+              <% elsif @bet.failed? %>
+                <span class="text-gray-600 font-bold">Failed</span>
+              <% else %>
+                <span class="text-yellow-600 font-bold">Pending</span>
+              <% end %>
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Placed At</p>
+            <p class="font-medium"><%= @bet.created_at.strftime("%B %d, %Y %H:%M:%S") %></p>
+          </div>
+        </div>
+      </div>
+      
+      <h2 class="text-xl font-semibold text-gray-800 mb-4">Verification Steps</h2>
+      <div class="space-y-6">
+        <% @verification_steps.each do |step| %>
+          <%= verification_step(step[:step], step[:value], step[:description]) %>
+        <% end %>
+      </div>
+      
+      <div class="mt-8 bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">How Verification Works</h3>
+        <p class="text-gray-600 text-sm">
+          Our lottery platform uses a transparent and verifiable process to determine bet outcomes.
+          The result is calculated using a deterministic random number generator seeded with your transaction hash.
+          This ensures that results cannot be manipulated and are fully verifiable by anyone.
+        </p>
+      </div>
+      
+      <div class="mt-6 flex justify-between items-center">
+        <%= link_to "Back to Bet", bet_path(@bet), class: "text-blue-600 hover:text-blue-800" %>
+        <%= link_to "View on Blockchain", "#", class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700", data: { controller: "tooltip", tooltip_content: "This would link to a blockchain explorer in Phase 2" } %>
+      </div>
+    </div>
+  </div>
+</div>

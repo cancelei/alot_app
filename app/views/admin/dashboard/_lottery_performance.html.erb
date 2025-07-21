@@ -1,0 +1,63 @@
+<%# Admin dashboard lottery performance partial %>
+<div id="lottery-performance" class="bg-white rounded-lg shadow p-6 mb-6">
+  <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Performing Lotteries</h3>
+  
+  <% if top_performing_lotteries.any? %>
+    <div class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Lottery</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Bets</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Players</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Win Rate</th>
+          </tr>
+        </thead>
+        <tbody class="bg-white divide-y divide-gray-200">
+          <% top_performing_lotteries.each do |lottery| %>
+            <tr>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <div class="flex items-center">
+                  <div class="ml-4">
+                    <div class="text-sm font-medium text-gray-900">
+                      <%= link_to lottery.name, admin_lottery_path(lottery), class: "text-blue-600 hover:text-blue-900" %>
+                    </div>
+                    <div class="text-sm text-gray-500"><%= lottery.description.truncate(50) if lottery.description %></div>
+                  </div>
+                </div>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap">
+                <%= render_lottery_status_badge(lottery) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= lottery.bet_count || 0 %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= number_to_currency(lottery.total_bet_amount || 0) %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <%= lottery.unique_players || 0 %>
+              </td>
+              <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <% 
+                  total_bets = lottery.bets.confirmed_bets.count
+                  won_bets = lottery.bets.won_bets.count
+                  win_rate = total_bets > 0 ? (won_bets.to_f / total_bets) * 100 : 0
+                %>
+                <%= number_to_percentage(win_rate, precision: 2) %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+    
+    <div class="mt-4 text-right">
+      <%= link_to "View All Lotteries", admin_lotteries_path, class: "text-sm text-blue-600 hover:text-blue-900" %>
+    </div>
+  <% else %>
+    <div class="py-4 text-center text-gray-500">No lotteries found</div>
+  <% end %>
+</div>

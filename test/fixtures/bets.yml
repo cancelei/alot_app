@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  player: one
+  lottery: one
+  amount: 9.99
+  signed_transaction_payload: MyText
+  confirmed_on_chain: false
+  cycle_number: 1
+  result: 1
+
+two:
+  player: two
+  lottery: two
+  amount: 9.99
+  signed_transaction_payload: MyText
+  confirmed_on_chain: false
+  cycle_number: 1
+  result: 1

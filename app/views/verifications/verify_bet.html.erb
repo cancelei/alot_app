@@ -1,0 +1,84 @@
+<%# Verification page for bet transactions %>
+<div class="container mx-auto px-4 py-8">
+  <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
+    <div class="bg-green-600 p-6">
+      <div class="flex items-center justify-between">
+        <h1 class="text-2xl font-bold text-white">Bet Transaction Verification</h1>
+        <%= verification_badge(@bet.confirmed_on_chain?) %>
+      </div>
+      <p class="text-green-100 mt-2">
+        Transparent verification of bet transaction for blockchain integrity
+      </p>
+    </div>
+    
+    <div class="p-6">
+      <div class="mb-6 pb-6 border-b">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Transaction Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Transaction Hash</p>
+            <p class="font-mono text-sm break-all"><%= @bet.signed_transaction_payload %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Status</p>
+            <p class="font-medium">
+              <% if @bet.confirmed_on_chain? %>
+                <span class="text-green-600 font-bold">Confirmed</span>
+              <% else %>
+                <span class="text-yellow-600 font-bold">Pending</span>
+              <% end %>
+            </p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Bet Amount</p>
+            <p class="font-medium"><%= number_to_currency(@bet.amount) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Lottery Contract</p>
+            <p class="font-medium"><%= @bet.lottery.smart_contract_address || "Not deployed yet" %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Player Address</p>
+            <p class="font-mono text-sm break-all"><%= @verification_data[:player_address] %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Timestamp</p>
+            <p class="font-medium"><%= Time.at(@verification_data[:timestamp]).strftime("%B %d, %Y %H:%M:%S") %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mb-6 pb-6 border-b">
+        <h2 class="text-xl font-semibold text-gray-800 mb-4">Lottery Information</h2>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p class="text-sm text-gray-600">Lottery Name</p>
+            <p class="font-medium"><%= @verification_data[:lottery_name] %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Odds</p>
+            <p class="font-medium"><%= odds_verification(@bet.lottery.odds_json) %></p>
+          </div>
+          <div>
+            <p class="text-sm text-gray-600">Payout Strategy</p>
+            <p class="font-medium"><%= @bet.lottery.payout_strategy.humanize %></p>
+          </div>
+        </div>
+      </div>
+      
+      <div class="mt-8 bg-gray-50 p-4 rounded-lg">
+        <h3 class="text-lg font-semibold text-gray-700 mb-2">How Transaction Verification Works</h3>
+        <p class="text-gray-600 text-sm">
+          In our MVP, transactions are simulated with cryptographic hashes for transparency.
+          In Phase 2, all bets will be recorded on the Polkadot blockchain with real transaction hashes
+          that can be independently verified on any blockchain explorer.
+        </p>
+      </div>
+      
+      <div class="mt-6 flex justify-between items-center">
+        <%= link_to "Back to Bet", bet_path(@bet), class: "text-blue-600 hover:text-blue-800" %>
+        <%= link_to "Verify Result", verify_result_bet_path(@bet), class: "px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700" %>
+      </div>
+    </div>
+  </div>
+</div>

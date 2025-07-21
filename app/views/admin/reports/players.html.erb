@@ -1,0 +1,190 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Player Reports</h1>
+    
+    <div class="flex space-x-2">
+      <%= link_to admin_reports_players_path, class: "px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+        </svg>
+        Players
+      <% end %>
+      
+      <%= link_to admin_reports_bets_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 8h6m-5 0a3 3 0 110 6H9l3 3m-3-6h6m6 1a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Bets
+      <% end %>
+      
+      <%= link_to admin_reports_payouts_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+        Payouts
+      <% end %>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Player Overview</h3>
+      <div class="grid grid-cols-2 gap-4">
+        <div class="bg-blue-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-blue-800 mb-2">Total Players</h4>
+          <p class="text-2xl font-bold text-blue-900"><%= @total_players %></p>
+        </div>
+        <div class="bg-green-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-green-800 mb-2">Active Players</h4>
+          <p class="text-2xl font-bold text-green-900"><%= @active_players %></p>
+        </div>
+        <div class="bg-purple-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-purple-800 mb-2">New Players (30d)</h4>
+          <p class="text-2xl font-bold text-purple-900"><%= @new_players %></p>
+        </div>
+        <div class="bg-yellow-50 p-4 rounded-lg">
+          <h4 class="text-sm font-medium text-yellow-800 mb-2">Retention Rate</h4>
+          <p class="text-2xl font-bold text-yellow-900"><%= number_to_percentage(LotteryStatisticsService.new.calculate_player_retention, precision: 1) %></p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6 lg:col-span-2">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Players by Bet Amount</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Total Bet Amount</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @top_players_by_amount.any? %>
+              <% @top_players_by_amount.each do |player| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><%= player.name.presence || 'Anonymous' %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-500"><%= player.email %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 font-medium"><%= number_to_currency(player.total_bet_amount) %></div>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">No player data available</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Top Players by Wins</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Player</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+              <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Wins</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <% if @top_players_by_wins.any? %>
+              <% @top_players_by_wins.each do |player| %>
+                <tr>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm font-medium text-gray-900"><%= player.name.presence || 'Anonymous' %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-500"><%= player.email %></div>
+                  </td>
+                  <td class="px-6 py-4 whitespace-nowrap">
+                    <div class="text-sm text-gray-900 font-medium"><%= player.win_count %></div>
+                  </td>
+                </tr>
+              <% end %>
+            <% else %>
+              <tr>
+                <td colspan="3" class="px-6 py-4 text-center text-sm text-gray-500">No player data available</td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-lg font-semibold text-gray-800 mb-4">Player Growth</h3>
+      <div class="relative" style="height: 300px;">
+        <canvas id="player-growth-chart"></canvas>
+      </div>
+      
+      <script>
+        document.addEventListener('DOMContentLoaded', function() {
+          const ctx = document.getElementById('player-growth-chart').getContext('2d');
+          
+          // Sample data - in a real app, this would come from the backend
+          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+          const currentMonth = new Date().getMonth();
+          const labels = Array.from({length: 6}, (_, i) => {
+            const monthIndex = (currentMonth - 5 + i + 12) % 12;
+            return months[monthIndex];
+          });
+          
+          new Chart(ctx, {
+            type: 'line',
+            data: {
+              labels: labels,
+              datasets: [{
+                label: 'New Players',
+                data: [<%= rand(10..30) %>, <%= rand(15..40) %>, <%= rand(20..50) %>, <%= rand(25..60) %>, <%= rand(30..70) %>, <%= @new_players %>],
+                borderColor: 'rgba(79, 70, 229, 1)',
+                backgroundColor: 'rgba(79, 70, 229, 0.1)',
+                borderWidth: 2,
+                fill: true,
+                tension: 0.4
+              }]
+            },
+            options: {
+              responsive: true,
+              maintainAspectRatio: false,
+              scales: {
+                y: {
+                  beginAtZero: true,
+                  title: {
+                    display: true,
+                    text: 'Player Count'
+                  }
+                },
+                x: {
+                  title: {
+                    display: true,
+                    text: 'Month'
+                  }
+                }
+              },
+              plugins: {
+                legend: {
+                  position: 'top',
+                },
+                title: {
+                  display: false
+                }
+              }
+            }
+          });
+        });
+      </script>
+    </div>
+  </div>
+</div>

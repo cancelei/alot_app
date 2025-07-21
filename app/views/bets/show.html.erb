@@ -1,0 +1,209 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Bet Details</h1>
+    <%= link_to lottery_path(@bet.lottery), class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Lottery
+    <% end %>
+  </div>
+  
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <!-- Left Column: Bet Details -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="p-6">
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-xl font-semibold text-gray-800">Bet Information</h2>
+            <span class="px-3 py-1 rounded-full text-sm font-medium <%= @bet.result == 'pending' ? 'bg-yellow-100 text-yellow-800' : (@bet.result == 'won' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800') %>">
+              <%= @bet.result.humanize %>
+            </span>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Lottery</h3>
+              <p class="mt-1 text-base font-medium text-gray-900"><%= @bet.lottery.name %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Bet Amount</h3>
+              <p class="mt-1 text-base font-medium text-gray-900"><%= number_to_currency(@bet.amount) %></p>
+            </div>
+            
+            <% if @bet.drawn_numbers.any? %>
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Drawn Numbers Cost</h3>
+              <p class="mt-1 text-base font-medium text-gray-900"><%= number_to_currency(total_drawn_numbers_cost(@bet)) %></p>
+            </div>
+            <% end %>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Cycle Number</h3>
+              <p class="mt-1 text-base font-medium text-gray-900"><%= @bet.cycle_number %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Placed On</h3>
+              <p class="mt-1 text-base font-medium text-gray-900"><%= @bet.created_at.strftime("%B %d, %Y at %I:%M %p") %></p>
+            </div>
+            
+            <div>
+              <h3 class="text-sm font-medium text-gray-500">Confirmed On Blockchain</h3>
+              <p class="mt-1 inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @bet.confirmed_on_chain ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= @bet.confirmed_on_chain ? 'Yes' : 'Pending' %>
+              </p>
+            </div>
+          </div>
+          
+          <% if @bet.result == 'won' %>
+            <div class="bg-green-50 p-4 rounded mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-green-800">Congratulations! You won this bet.</h3>
+                  <% payout = @bet.lottery.payout_logs.find_by(bet: @bet) %>
+                  <% if payout.present? %>
+                    <p class="text-sm text-green-700 mt-2">You won <%= number_to_currency(payout.amount) %>!</p>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+          <% elsif @bet.result == 'lost' %>
+            <div class="bg-red-50 p-4 rounded mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">Sorry, you didn't win this time.</h3>
+                  <p class="text-sm text-red-700 mt-2">Better luck next time!</p>
+                </div>
+              </div>
+            </div>
+          <% else %>
+            <div class="bg-yellow-50 p-4 rounded mb-4">
+              <div class="flex">
+                <div class="flex-shrink-0">
+                  <svg class="h-5 w-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clip-rule="evenodd"/>
+                  </svg>
+                </div>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-yellow-800">Your bet is being processed.</h3>
+                  <p class="text-sm text-yellow-700 mt-2">Results will be available once the lottery cycle completes.</p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+          
+          <div class="border-t border-gray-200 pt-4">
+            <h3 class="text-sm font-medium text-gray-500 mb-2">Transaction Details</h3>
+            <div class="bg-gray-50 p-3 rounded overflow-x-auto">
+              <code class="text-xs text-gray-800 break-all"><%= @bet.signed_transaction_payload %></code>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Verification Links -->
+      <div class="bg-white rounded-lg shadow overflow-hidden mb-6">
+        <div class="p-6">
+          <h2 class="text-lg font-semibold text-gray-800 mb-4">Verify on Blockchain</h2>
+          <p class="text-sm text-gray-600 mb-4">You can verify the integrity of this bet on the blockchain using the links below:</p>
+          
+          <div class="space-y-3">
+            <%= link_to verify_bet_path(@bet), class: "flex items-center text-blue-600 hover:text-blue-800" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>
+              </svg>
+              Verify Bet Integrity
+            <% end %>
+            
+            <%= link_to verify_result_bet_path(@bet), class: "flex items-center text-blue-600 hover:text-blue-800" do %>
+              <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+              Verify Result Calculation
+            <% end %>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Right Column: Drawn Numbers -->
+    <div>
+      <!-- Number Drawing Form if bet is pending -->
+      <% if @bet.result == 'pending' && @bet.lottery.active? %>
+        <%= render 'drawn_numbers/form', bet: @bet %>
+        
+        <% if @bet.drawn_numbers.any? %>
+          <!-- Visual number grid for active bets -->
+          <%= render 'drawn_numbers/number_grid', bet: @bet %>
+        <% end %>
+      <% else %>
+        <!-- Just show drawn numbers without form -->
+        <div class="bg-white rounded-lg shadow p-6 mb-6">
+          <div class="flex justify-between items-center mb-4">
+            <h3 class="text-lg font-medium text-gray-900">Your Drawn Numbers</h3>
+            <span class="px-3 py-1 rounded-full text-sm font-medium bg-blue-100 text-blue-800">
+              <%= @bet.drawn_numbers.count %> / <%= @bet.lottery.max_numbers_to_draw %>
+              (<%= remaining_draws(@bet) %> remaining)
+            </span>
+          </div>
+          
+          <% if @bet.drawn_numbers.any? %>
+            <div id="drawn_numbers">
+              <% @bet.drawn_numbers.order(created_at: :desc).each do |drawn_number| %>
+                <%= render 'drawn_numbers/drawn_number', drawn_number: drawn_number %>
+              <% end %>
+            </div>
+            
+            <!-- Visual number grid for completed bets -->
+            <%= render 'drawn_numbers/number_grid', bet: @bet %>
+          <% else %>
+            <div class="text-center py-4 text-gray-500">
+              <p>No numbers drawn for this bet</p>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      
+      <!-- Winning Summary (if applicable) -->
+      <%= render 'bets/winning_summary', bet: @bet %>
+      
+      <!-- Lottery Info -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-medium text-gray-900 mb-4">Lottery Information</h3>
+        
+        <div class="space-y-4">
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Name</h4>
+            <p class="mt-1 text-base font-medium text-gray-900"><%= @bet.lottery.name %></p>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Win Probability</h4>
+            <p class="mt-1 text-base font-medium text-gray-900"><%= number_to_percentage(@bet.lottery.odds_json["win_probability"] * 100, precision: 2) %></p>
+          </div>
+          
+          <div>
+            <h4 class="text-sm font-medium text-gray-500">Payout Multiplier</h4>
+            <p class="mt-1 text-base font-medium text-gray-900"><%= @bet.lottery.odds_json["payout_multiplier"] %>x</p>
+          </div>
+          
+          <div class="pt-4">
+            <%= link_to "View Lottery Details", lottery_path(@bet.lottery), class: "w-full block text-center px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
