@@ -1,0 +1,53 @@
+<%# Admin Lottery Game Feature Requests Partial %>
+<div class="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
+  <div class="px-4 py-5 sm:px-6 flex justify-between items-center">
+    <div>
+      <h3 class="text-lg leading-6 font-medium text-gray-900">Lottery Game Requests</h3>
+      <p class="mt-1 max-w-2xl text-sm text-gray-500">Player-requested lottery game types</p>
+    </div>
+    <%= link_to admin_feature_requests_path(category: "lottery_game"), class: "text-sm text-blue-600 hover:text-blue-800" do %>
+      View all <span aria-hidden="true">→</span>
+    <% end %>
+  </div>
+  
+  <div class="border-t border-gray-200">
+    <% if lottery_game_requests.any? %>
+      <ul class="divide-y divide-gray-200">
+        <% lottery_game_requests.each do |request| %>
+          <li class="px-4 py-4 sm:px-6 hover:bg-gray-50">
+            <%= link_to admin_feature_request_path(request), class: "block" do %>
+              <div class="flex items-center justify-between">
+                <div class="truncate">
+                  <div class="flex items-center">
+                    <p class="text-sm font-medium text-blue-600 truncate"><%= request.title %></p>
+                    <div class="ml-2 flex-shrink-0">
+                      <span class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+                        <%= status_color(request.status) %>">
+                        <%= request.status.humanize %>
+                      </span>
+                    </div>
+                  </div>
+                  <div class="mt-1">
+                    <p class="text-xs text-gray-500 truncate">
+                      Requested by <%= request.submitted_by.name || request.submitted_by.email %> 
+                      <%= time_ago_in_words(request.created_at) %> ago
+                    </p>
+                  </div>
+                </div>
+                <div class="ml-2 flex-shrink-0">
+                  <svg class="h-5 w-5 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  </svg>
+                </div>
+              </div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <div class="px-4 py-5 sm:px-6 text-center">
+        <p class="text-sm text-gray-500">No lottery game requests yet</p>
+      </div>
+    <% end %>
+  </div>
+</div>

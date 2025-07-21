@@ -37,6 +37,18 @@
   } %>
   
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <%# Lottery Game Statistics - New Section %>
+    <div class="lg:col-span-2">
+      <%= render partial: "admin/dashboard/lottery_game_statistics" %>
+    </div>
+    
+    <%# Lottery Game Feature Requests - New Section %>
+    <div class="lg:col-span-2">
+      <%= render partial: "admin/feature_requests/lottery_game_requests", locals: {
+        lottery_game_requests: @lottery_game_requests
+      } %>
+    </div>
+    
     <%# Betting Trends %>
     <div class="lg:col-span-2">
       <%= render partial: "admin/dashboard/betting_trends", locals: {

@@ -9,6 +9,16 @@ class Admin::FeatureRequestsController < ApplicationController
     if params[:status].present? && FeatureRequest.statuses.keys.include?(params[:status])
       @feature_requests = @feature_requests.where(status: params[:status])
     end
+
+    # Filter by category if provided
+    if params[:category].present? && FeatureRequest.categories.keys.include?(params[:category])
+      @feature_requests = @feature_requests.where(category: params[:category])
+
+      # Filter by game_type for lottery games
+      if params[:category] == "lottery_game" && params[:game_type].present?
+        @feature_requests = @feature_requests.where("title ILIKE ? OR description ILIKE ?", "%#{params[:game_type]}%", "%#{params[:game_type]}%")
+      end
+    end
   end
 
   def show
@@ -42,6 +52,6 @@ class Admin::FeatureRequestsController < ApplicationController
   end
 
   def feature_request_params
-    params.require(:feature_request).permit(:title, :description, :status)
+    params.require(:feature_request).permit(:title, :description, :status, :category)
   end
 end

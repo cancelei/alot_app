@@ -1,0 +1,162 @@
+<%# Powerball Game Type Detailed View %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Powerball Lottery</h1>
+    <%= link_to feature_requests_lotteries_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Lottery Games
+    <% end %>
+  </div>
+
+  <div class="bg-gradient-to-r from-red-500 to-orange-500 rounded-lg shadow-lg overflow-hidden mb-8">
+    <div class="p-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+          <h2 class="text-3xl font-bold text-white mb-4">Massive Jackpots, Life-Changing Prizes</h2>
+          <p class="text-red-100 text-lg mb-6">Powerball offers some of the largest lottery jackpots in the world. Pick your numbers and dream big with progressive jackpots that can grow to millions!</p>
+          <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-6">
+            <h3 class="text-xl font-semibold text-white mb-2">How It Works</h3>
+            <ul class="text-red-100 space-y-2">
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-red-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Choose 5 main numbers from 1-69
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-red-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Select 1 Powerball number from 1-26
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-red-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Drawings held twice weekly
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-red-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Match all numbers to win the jackpot
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="md:w-1/2">
+          <div class="bg-white rounded-lg shadow-xl p-6">
+            <div class="text-center mb-4">
+              <h3 class="text-xl font-bold text-gray-800">Next Estimated Jackpot</h3>
+              <div class="text-4xl font-bold text-red-600 mt-2">$245,000,000</div>
+            </div>
+            <div class="grid grid-cols-5 gap-2 mb-4">
+              <% 5.times do |i| %>
+                <div class="bg-gray-100 rounded-full h-12 w-12 flex items-center justify-center mx-auto">
+                  <span class="text-xl font-bold text-gray-800"><%= rand(1..69) %></span>
+                </div>
+              <% end %>
+            </div>
+            <div class="flex justify-center items-center">
+              <div class="bg-red-500 rounded-full h-14 w-14 flex items-center justify-center mx-auto">
+                <span class="text-xl font-bold text-white"><%= rand(1..26) %></span>
+              </div>
+            </div>
+            <div class="mt-4 text-center">
+              <span class="text-sm font-medium text-gray-500">POWERBALL</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Game Features</h3>
+      <ul class="space-y-3">
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Progressive jackpots that grow until won</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Multiple prize tiers for partial matches</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Power Play option to multiply non-jackpot prizes</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Quick Pick option for random number selection</span>
+        </li>
+        <li class="flex items-start">
+          <svg class="w-5 h-5 text-green-500 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+          <span>Multi-draw options for multiple consecutive drawings</span>
+        </li>
+      </ul>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Prize Structure</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Match</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prize</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Odds</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">5 + Powerball</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-green-600">Jackpot</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 292,201,338</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">5</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-green-600">$1,000,000</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 11,688,054</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">4 + Powerball</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-green-600">$50,000</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 913,129</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">4</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-green-600">$100</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 36,525</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">3 + Powerball</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm font-medium text-green-600">$100</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 14,494</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Request This Game</h3>
+    <p class="text-gray-600 mb-6">Would you like to see Powerball added to our platform? Submit your request below and let us know what features you'd like to see!</p>
+    
+    <%= render partial: "feature_requests/form", locals: { feature_request: @feature_request } %>
+  </div>
+</div>

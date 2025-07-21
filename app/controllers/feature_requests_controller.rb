@@ -9,7 +9,7 @@ class FeatureRequestsController < ApplicationController
   def create
     @feature_request = FeatureRequest.new(feature_request_params)
     @feature_request.submitted_by = current_user
-    @feature_request.status = :pending_review # Default status
+    @feature_request.status = :under_review # Default status
 
     authorize @feature_request
 
@@ -35,6 +35,6 @@ class FeatureRequestsController < ApplicationController
   end
 
   def feature_request_params
-    params.require(:feature_request).permit(:title, :description)
+    params.require(:feature_request).permit(:title, :description, :category)
   end
 end

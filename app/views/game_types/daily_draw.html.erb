@@ -1,0 +1,165 @@
+<%# Daily Draw Game Type Detailed View %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Daily Draw Lottery</h1>
+    <%= link_to feature_requests_lotteries_path, class: "px-4 py-2 bg-gray-200 text-gray-700 rounded hover:bg-gray-300 flex items-center" do %>
+      <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+      </svg>
+      Back to Lottery Games
+    <% end %>
+  </div>
+
+  <div class="bg-gradient-to-r from-green-500 to-emerald-600 rounded-lg shadow-lg overflow-hidden mb-8">
+    <div class="p-8">
+      <div class="flex flex-col md:flex-row items-center">
+        <div class="md:w-1/2 mb-6 md:mb-0 md:pr-8">
+          <h2 class="text-3xl font-bold text-white mb-4">Daily Chances to Win</h2>
+          <p class="text-green-100 text-lg mb-6">Daily Draw offers regular opportunities to win with draws happening every day. Pick your lucky numbers and check back daily for results!</p>
+          <div class="bg-white bg-opacity-20 rounded-lg p-4 mb-6">
+            <h3 class="text-xl font-semibold text-white mb-2">How It Works</h3>
+            <ul class="text-green-100 space-y-2">
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-green-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Choose 3, 4, or 5 numbers depending on game variant
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-green-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Select how you want to play: exact order or any order
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-green-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Drawings held once daily at a set time
+              </li>
+              <li class="flex items-start">
+                <svg class="w-5 h-5 text-green-200 mr-2 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                </svg>
+                Match your numbers to win fixed prizes
+              </li>
+            </ul>
+          </div>
+        </div>
+        <div class="md:w-1/2">
+          <div class="bg-white rounded-lg shadow-xl p-6">
+            <div class="text-center mb-4">
+              <h3 class="text-xl font-bold text-gray-800">Today's Draw</h3>
+              <p class="text-gray-500 text-sm">Drawing at 7:00 PM</p>
+            </div>
+            <div class="flex justify-center space-x-4 mb-6">
+              <div class="bg-green-500 rounded-lg h-16 w-16 flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">3</span>
+              </div>
+              <div class="bg-green-500 rounded-lg h-16 w-16 flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">7</span>
+              </div>
+              <div class="bg-green-500 rounded-lg h-16 w-16 flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">9</span>
+              </div>
+              <div class="bg-green-500 rounded-lg h-16 w-16 flex items-center justify-center">
+                <span class="text-2xl font-bold text-white">2</span>
+              </div>
+            </div>
+            <div class="border-t border-gray-200 pt-4">
+              <div class="flex justify-between items-center mb-2">
+                <span class="text-sm font-medium text-gray-500">Yesterday's Winners:</span>
+                <span class="text-sm font-bold text-green-600">127</span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-sm font-medium text-gray-500">Total Prize Pool:</span>
+                <span class="text-sm font-bold text-green-600">$52,400</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Game Variants</h3>
+      <div class="space-y-4">
+        <div class="border-b border-gray-200 pb-4">
+          <h4 class="font-semibold text-gray-800 mb-2">Pick 3</h4>
+          <p class="text-gray-600 mb-2">Choose 3 digits from 0-9. Play exact order or any order.</p>
+          <div class="flex items-center">
+            <span class="text-sm font-medium text-gray-500 mr-2">Top Prize:</span>
+            <span class="text-sm font-bold text-green-600">$500 (exact order)</span>
+          </div>
+        </div>
+        <div class="border-b border-gray-200 pb-4">
+          <h4 class="font-semibold text-gray-800 mb-2">Pick 4</h4>
+          <p class="text-gray-600 mb-2">Choose 4 digits from 0-9. Play exact order or any order.</p>
+          <div class="flex items-center">
+            <span class="text-sm font-medium text-gray-500 mr-2">Top Prize:</span>
+            <span class="text-sm font-bold text-green-600">$5,000 (exact order)</span>
+          </div>
+        </div>
+        <div>
+          <h4 class="font-semibold text-gray-800 mb-2">Pick 5</h4>
+          <p class="text-gray-600 mb-2">Choose 5 digits from 0-9. Play exact order or any order.</p>
+          <div class="flex items-center">
+            <span class="text-sm font-medium text-gray-500 mr-2">Top Prize:</span>
+            <span class="text-sm font-bold text-green-600">$50,000 (exact order)</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-lg shadow p-6">
+      <h3 class="text-xl font-bold text-gray-800 mb-4">Play Types & Odds</h3>
+      <div class="overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead>
+            <tr>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Play Type</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Description</th>
+              <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Odds (Pick 3)</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Straight</td>
+              <td class="px-4 py-2 text-sm text-gray-700">Match exact order</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 1,000</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Box</td>
+              <td class="px-4 py-2 text-sm text-gray-700">Match any order</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 167</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Straight/Box</td>
+              <td class="px-4 py-2 text-sm text-gray-700">Combination play</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 167</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Front Pair</td>
+              <td class="px-4 py-2 text-sm text-gray-700">Match first two digits</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 100</td>
+            </tr>
+            <tr>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">Back Pair</td>
+              <td class="px-4 py-2 text-sm text-gray-700">Match last two digits</td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm text-gray-700">1 in 100</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow p-6 mb-8">
+    <h3 class="text-xl font-bold text-gray-800 mb-4">Request This Game</h3>
+    <p class="text-gray-600 mb-6">Would you like to see Daily Draw added to our platform? Submit your request below and let us know what features you'd like to see!</p>
+    
+    <%= render partial: "feature_requests/form", locals: { feature_request: @feature_request } %>
+  </div>
+</div>

@@ -21,6 +21,11 @@ Rails.application.routes.draw do
     member do
       get :verify, to: "verifications#verify_lottery"
     end
+
+    collection do
+      get :feature_requests, to: "lotteries#feature_requests"
+      get "game_types/:type", to: "lotteries#game_type", as: :game_type
+    end
   end
 
   resources :bets, only: [ :show ] do

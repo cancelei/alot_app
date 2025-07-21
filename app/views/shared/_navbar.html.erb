@@ -23,6 +23,34 @@
           <% if user_signed_in? && current_user.player? %>
             <%= link_to "My Bets", player_dashboard_path, class: "px-3 py-2 rounded-md text-sm font-medium #{current_page?(player_dashboard_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
             <%= link_to "Lotteries", lotteries_path, class: "px-3 py-2 rounded-md text-sm font-medium #{current_page?(lotteries_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
+            <div class="relative" data-controller="dropdown">
+              <button type="button" class="px-3 py-2 rounded-md text-sm font-medium text-gray-700 hover:bg-gray-100 focus:outline-none group" 
+                      data-action="click->dropdown#toggle" 
+                      data-dropdown-target="button">
+                Lottery Games
+                <svg class="ml-1 -mr-1 h-5 w-5 inline group-hover:text-indigo-600" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                </svg>
+              </button>
+              <div class="hidden absolute left-0 mt-2 w-56 bg-white rounded-md shadow-lg py-1 z-50" 
+                   data-dropdown-target="menu">
+                <%= link_to "All Lottery Games", lotteries_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to "Request New Games", feature_requests_lotteries_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <div class="border-t border-gray-100 my-1"></div>
+                <%= link_to game_type_lotteries_path(type: 'scratch_card'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-orange-500 mr-2"></span> Scratch Cards
+                <% end %>
+                <%= link_to game_type_lotteries_path(type: 'powerball'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-red-500 mr-2"></span> Powerball
+                <% end %>
+                <%= link_to game_type_lotteries_path(type: 'keno'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Keno
+                <% end %>
+                <%= link_to game_type_lotteries_path(type: 'daily_draw'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> Daily Draw
+                <% end %>
+              </div>
+            </div>
             <%= link_to "Feature Requests", feature_requests_path, class: "px-3 py-2 rounded-md text-sm font-medium #{current_page?(feature_requests_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
           <% end %>
           
@@ -39,9 +67,39 @@
               </button>
               <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" 
                    data-dropdown-target="menu">
-                <%= link_to "Manage Lotteries", admin_lotteries_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to "Dashboard", admin_dashboard_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 <%= link_to "Manage Users", admin_dashboard_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                <%= link_to "Feature Requests", admin_feature_requests_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to "Manage Lotteries", admin_lotteries_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                
+                <div class="border-t border-gray-100 my-1"></div>
+                <div class="px-4 py-1 text-xs font-semibold text-gray-500">Feature Requests</div>
+                
+                <%= link_to "All Requests", admin_feature_requests_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to admin_feature_requests_path(category: 'lottery_game'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-indigo-500 mr-2"></span> Lottery Games
+                <% end %>
+                
+                <div class="pl-6">
+                  <%= link_to admin_feature_requests_path(category: 'lottery_game', game_type: 'scratch_card'), class: "block px-4 py-1 text-xs text-gray-600 hover:bg-gray-100 flex items-center" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-orange-500 mr-1.5"></span> Scratch Cards
+                  <% end %>
+                  <%= link_to admin_feature_requests_path(category: 'lottery_game', game_type: 'powerball'), class: "block px-4 py-1 text-xs text-gray-600 hover:bg-gray-100 flex items-center" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-red-500 mr-1.5"></span> Powerball
+                  <% end %>
+                  <%= link_to admin_feature_requests_path(category: 'lottery_game', game_type: 'keno'), class: "block px-4 py-1 text-xs text-gray-600 hover:bg-gray-100 flex items-center" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500 mr-1.5"></span> Keno
+                  <% end %>
+                  <%= link_to admin_feature_requests_path(category: 'lottery_game', game_type: 'daily_draw'), class: "block px-4 py-1 text-xs text-gray-600 hover:bg-gray-100 flex items-center" do %>
+                    <span class="w-1.5 h-1.5 rounded-full bg-green-500 mr-1.5"></span> Daily Draw
+                  <% end %>
+                </div>
+                
+                <%= link_to admin_feature_requests_path(category: 'user_interface'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-teal-500 mr-2"></span> UI/UX
+                <% end %>
+                <%= link_to admin_feature_requests_path(category: 'payment'), class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center" do %>
+                  <span class="w-2 h-2 rounded-full bg-emerald-500 mr-2"></span> Payment
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -121,6 +179,7 @@
       <% if user_signed_in? && current_user.player? %>
         <%= link_to "My Bets", player_dashboard_path, class: "block px-3 py-2 rounded-md text-base font-medium #{current_page?(player_dashboard_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
         <%= link_to "Lotteries", lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium #{current_page?(lotteries_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
+        <%= link_to "New Lottery Games", feature_requests_lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium #{current_page?(feature_requests_lotteries_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
         <%= link_to "Feature Requests", feature_requests_path, class: "block px-3 py-2 rounded-md text-base font-medium #{current_page?(feature_requests_path) ? 'bg-indigo-100 text-indigo-700' : 'text-gray-700 hover:bg-gray-100'}" %>
       <% end %>
       
@@ -131,6 +190,7 @@
           <%= link_to "Manage Lotteries", admin_lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
           <%= link_to "Manage Users", admin_dashboard_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
           <%= link_to "Feature Requests", admin_feature_requests_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
+          <%= link_to "Lottery Game Requests", feature_requests_lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
         </div>
       <% end %>
       

@@ -39,16 +39,16 @@ class Lottery < ApplicationRecord
       deployed_at + (24.hours * cycles_count)
     end
   end
-  
+
   # Calculate the next draw time for the lottery
   # For active lotteries, this is based on the most recent draw or deployment time
   # Returns a time 24 hours after the last draw or deployment time
   def next_draw_at
     return nil unless active? && deployed_at
-    
+
     # Get the most recent drawn number's timestamp, if any
     last_draw = drawn_numbers.order(created_at: :desc).first
-    
+
     if last_draw
       # Next draw is 24 hours after the last draw
       last_draw.created_at + 24.hours

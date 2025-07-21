@@ -1,0 +1,33 @@
+<%# Lottery Feature Requests page %>
+<div class="container mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-800">Request New Lottery Games</h1>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden mb-8">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Exciting New Game Types</h2>
+      <p class="mt-2 text-gray-600">Vote for your favorite new lottery game types or suggest your own!</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+      <%= render 'lotteries/game_types/scratch_card' %>
+      <%= render 'lotteries/game_types/powerball' %>
+      <%= render 'lotteries/game_types/keno' %>
+      <%= render 'lotteries/game_types/daily_draw' %>
+    </div>
+  </div>
+
+  <div class="bg-white rounded-lg shadow overflow-hidden">
+    <div class="p-6 border-b border-gray-200">
+      <h2 class="text-xl font-semibold text-gray-800">Suggest Your Own Game</h2>
+      <p class="mt-2 text-gray-600">Have an idea for a lottery game? Let us know!</p>
+    </div>
+
+    <div class="p-6">
+      <%= render 'feature_requests/form', 
+                 feature_request: FeatureRequest.new,
+                 category: 'lottery_game' %>
+    </div>
+  </div>
+</div>

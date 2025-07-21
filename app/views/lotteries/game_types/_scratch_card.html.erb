@@ -1,0 +1,62 @@
+<%# Scratch Card Game Type %>
+<div class="bg-gradient-to-r from-yellow-400 to-yellow-600 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+  <div class="relative">
+    <div class="absolute inset-0 bg-black bg-opacity-20"></div>
+    <img src="https://images.unsplash.com/photo-1518544801976-5e98ac88be54?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+         alt="Scratch Card" 
+         class="w-full h-48 object-cover">
+    <div class="absolute top-4 right-4 bg-white rounded-full px-3 py-1 text-sm font-semibold text-yellow-600">
+      Popular
+    </div>
+  </div>
+  
+  <div class="p-6">
+    <h3 class="text-xl font-bold text-white mb-2">Scratch Cards</h3>
+    <p class="text-white text-opacity-90 mb-4">Instant wins with exciting themes and multiple ways to win. Reveal matching symbols and win instantly!</p>
+    
+    <div class="mt-4 space-y-2">
+      <div class="bg-white bg-opacity-20 rounded p-2 text-sm text-white">
+        <span class="font-semibold">Odds:</span> 1 in 4.5 chance of winning
+      </div>
+      <div class="bg-white bg-opacity-20 rounded p-2 text-sm text-white">
+        <span class="font-semibold">Features:</span> Multiple games per card
+      </div>
+    </div>
+    
+    <div class="flex items-center justify-between mt-4">
+      <div class="flex items-center space-x-1">
+        <span class="text-white text-opacity-90 text-sm">Win up to</span>
+        <span class="text-white font-bold text-xl">100x</span>
+      </div>
+      
+      <div class="flex items-center space-x-2">
+        <span class="text-white text-opacity-90 text-sm">Starting at</span>
+        <span class="text-white font-bold">$1</span>
+      </div>
+    </div>
+    
+    <div class="mt-6 flex space-x-3">
+      <%= link_to game_type_lotteries_path(type: 'scratch_card'), 
+                  class: "flex-1 bg-white text-yellow-600 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-50 transition-colors duration-300 flex items-center justify-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2h-1V9a1 1 0 00-1-1z" clip-rule="evenodd" />
+        </svg>
+        Learn More
+      <% end %>
+      
+      <%= button_to feature_requests_path, 
+                    params: { feature_request: { 
+                      title: "Add Scratch Cards", 
+                      description: "I would like to see scratch card games added to the platform.",
+                      category: "lottery_game" 
+                    }},
+                    method: :post,
+                    class: "flex-1 bg-white text-yellow-600 font-semibold py-2 px-4 rounded-lg hover:bg-yellow-50 transition-colors duration-300 flex items-center justify-center" do %>
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+          <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clip-rule="evenodd" />
+        </svg>
+        Request
+      <% end %>
+    </div>
+  </div>
+</div>

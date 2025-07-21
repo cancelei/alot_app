@@ -38,6 +38,9 @@ class Admin::DashboardController < ApplicationController
     # Get recent feature requests
     @recent_feature_requests = FeatureRequest.order(created_at: :desc).limit(5)
 
+    # Get lottery game feature requests
+    @lottery_game_requests = FeatureRequest.lottery_games.order(created_at: :desc).limit(5)
+
     # Get lottery performance
     @top_performing_lotteries = statistics_service.lottery_performance.limit(5)
 
