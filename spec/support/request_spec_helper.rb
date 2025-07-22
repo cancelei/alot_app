@@ -10,8 +10,8 @@ module RequestSpecHelper
     admin_user
   end
 
-  def sign_in_as_user
-    user = create(:user)
+  def sign_in_as_user(user = nil)
+    user ||= create(:user)
     post user_session_path, params: {
       user: {
         email: user.email,

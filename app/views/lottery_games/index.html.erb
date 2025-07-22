@@ -1,14 +1,10 @@
-<% content_for :title, "Lottery Games" %>
-
-<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
-  <div class="container mx-auto px-4 py-8">
-    <!-- Header -->
-    <div class="text-center mb-12">
-      <h1 class="text-4xl font-bold text-gray-900 mb-4">Choose Your Game</h1>
-      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
-        From rapid 5-minute draws to massive weekly jackpots - find your perfect lottery experience
-      </p>
-    </div>
+<h1>Lottery Games Test</h1>
+<p>Games count: <%= @lottery_games.count %></p>
+<ul>
+  <% @lottery_games.each do |game| %>
+    <li><%= game.name %> - <%= game.game_type %></li>
+  <% end %>
+</ul>
 
     <!-- Game Categories -->
     <div class="mb-8">

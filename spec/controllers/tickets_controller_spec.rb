@@ -1,38 +1,38 @@
 require 'rails_helper'
 
-RSpec.describe TicketsController, type: :controller do
+RSpec.describe TicketsController, type: :request do
   let(:user) { create(:user, account_balance: 50.0) }
   let(:lottery_game) { create(:lottery_game) }
   let(:draw) { create(:draw, :upcoming, lottery_game: lottery_game) }
 
   before do
-    sign_in user
+    sign_in_as_user(user)
   end
 
-  describe 'GET #index' do
+  describe 'GET /tickets' do
     let!(:active_ticket) { create(:ticket, user: user, status: 'active') }
     let!(:winning_ticket) { create(:ticket, :winning, user: user) }
 
     it 'returns successful response' do
-      get :index
+      get '/tickets'
       expect(response).to have_http_status(:success)
     end
 
     it 'assigns user tickets' do
-      get :index
+      get '/tickets'
       expect(assigns(:active_tickets)).to include(active_ticket)
       expect(assigns(:winning_tickets)).to include(winning_ticket)
     end
 
     it 'calculates ticket stats' do
-      get :index
+      get '/tickets'
       stats = assigns(:ticket_stats)
       expect(stats[:active_count]).to eq(1)
       expect(stats[:winning_count]).to eq(1)
     end
   end
 
-  describe 'POST #create' do
+  describe 'POST /lottery_games/:lottery_game_id/tickets' do
     let(:valid_numbers) { [ 1, 2, 3, 4, 5, 6 ] }
     let(:expected_cost) { 2.0 }
 
@@ -49,13 +49,13 @@ RSpec.describe TicketsController, type: :controller do
 
       it 'creates a new ticket' do
         expect {
-          post :create, params: valid_params
+          post "/lottery_games/#{lottery_game.id}/tickets", params: valid_params
         }.to change(Ticket, :count).by(1)
       end
 
       it 'deducts cost from user account' do
         initial_balance = user.account_balance
-        post :create, params: valid_params
+        post "/lottery_games/#{lottery_game.id}/tickets", params: valid_params
         user.reload
         expect(user.account_balance).to eq(initial_balance - expected_cost)
       end

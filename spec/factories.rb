@@ -14,6 +14,7 @@ FactoryBot.define do
     spending_limit_weekly { 500.00 }
     spending_limit_monthly { 2000.00 }
     self_excluded { false }
+    association :state_jurisdiction
 
     trait :admin do
       role { "super_admin" }
@@ -34,12 +35,23 @@ FactoryBot.define do
     end
   end
 
+  factory :state_jurisdiction do
+    state_code { "CA" }
+    state_name { "California" }
+    minimum_age { 18 }
+    tax_rate { 0.13 }
+    is_active { true }
+    lottery_legal { true }
+    winnings_threshold { 600.0 }
+    claim_period { 180 }
+  end
+
   factory :lottery_game do
     sequence(:name) { |n| "Test Lottery #{n}" }
     description { "A test lottery game" }
     game_type { "rapid" }
     ticket_price { 2.0 }
-    draw_frequency { 5 }
+    draw_frequency { 5 } # Default for rapid games
     jackpot_seed { 10000.0 }
     jackpot_increment { 0.1 }
     prize_pool_percentage { 70.0 }
@@ -50,6 +62,18 @@ FactoryBot.define do
     pool_reset_rule { "reset_to_seed" }
     is_active { true }
     current_jackpot { 0.0 }
+
+    # Trait for daily games with correct draw frequency
+    trait :daily do
+      game_type { "daily" }
+      draw_frequency { 1440 } # 24 hours in minutes for daily games
+    end
+
+    # Trait for weekly games
+    trait :weekly do
+      game_type { "weekly" }
+      draw_frequency { 10080 } # 7 days in minutes for weekly games
+    end
   end
 
   factory :draw do

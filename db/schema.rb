@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_07_21_155640) do
+ActiveRecord::Schema[8.0].define(version: 2025_07_21_184605) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -339,7 +339,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_07_21_155640) do
   add_foreign_key "drawn_numbers", "bets"
   add_foreign_key "drawn_numbers", "lotteries"
   add_foreign_key "drawn_numbers", "users"
-  add_foreign_key "draws", "lotteries", column: "lottery_game_id"
+  add_foreign_key "draws", "lottery_games"
   add_foreign_key "feature_requests", "users", column: "submitted_by_id"
   add_foreign_key "identity_verifications", "users", name: "identity_verifications_user_id_fkey"
   add_foreign_key "lotteries", "users", column: "created_by_id"

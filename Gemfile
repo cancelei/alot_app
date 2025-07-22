@@ -79,6 +79,9 @@ group :test do
   # Database cleaning for tests
   gem "database_cleaner-active_record", "~> 2.1"
 
+  # Rails controller testing helpers (assigns, assert_template, etc.)
+  gem "rails-controller-testing"
+
   # Test utilities
   gem "shoulda-matchers", "~> 5.3"
   gem "timecop", "~> 0.9"

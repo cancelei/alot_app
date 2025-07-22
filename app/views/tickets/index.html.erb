@@ -1,0 +1,67 @@
+<% content_for :title, "My Tickets" %>
+
+<div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-gray-900">My Tickets</h1>
+    <p class="mt-2 text-gray-600">View and manage your lottery tickets</p>
+  </div>
+
+  <% if @active_tickets&.any? %>
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Active Tickets</h2>
+      <div class="grid gap-4">
+        <% @active_tickets.each do |ticket| %>
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900"><%= ticket.lottery_game&.name %></h3>
+                <p class="text-sm text-gray-600">Numbers: <%= ticket.numbers&.join(', ') %></p>
+                <p class="text-sm text-gray-600">Cost: $<%= ticket.cost %></p>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                Active
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if @winning_tickets&.any? %>
+    <div class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 mb-4">Winning Tickets</h2>
+      <div class="grid gap-4">
+        <% @winning_tickets.each do |ticket| %>
+          <div class="bg-white border border-gray-200 rounded-lg p-4">
+            <div class="flex justify-between items-start">
+              <div>
+                <h3 class="font-medium text-gray-900"><%= ticket.lottery_game&.name %></h3>
+                <p class="text-sm text-gray-600">Numbers: <%= ticket.numbers&.join(', ') %></p>
+                <p class="text-sm text-gray-600">Prize: $<%= ticket.prize_amount %></p>
+              </div>
+              <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-800">
+                Winner
+              </span>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <% if (@active_tickets&.empty? || @active_tickets.nil?) && (@winning_tickets&.empty? || @winning_tickets.nil?) %>
+    <div class="text-center py-12">
+      <div class="mx-auto h-12 w-12 text-gray-400">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+        </svg>
+      </div>
+      <h3 class="mt-2 text-sm font-medium text-gray-900">No tickets yet</h3>
+      <p class="mt-1 text-sm text-gray-500">Get started by purchasing your first lottery ticket.</p>
+      <div class="mt-6">
+        <%= link_to "Browse Games", lottery_games_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+      </div>
+    </div>
+  <% end %>
+</div>
