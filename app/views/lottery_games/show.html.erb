@@ -1,0 +1,405 @@
+<% content_for :title, @lottery_game.name %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100">
+  <div class="container mx-auto px-4 py-8">
+    
+    <!-- Back Button -->
+    <div class="mb-6">
+      <%= link_to lottery_games_path, 
+          class: "inline-flex items-center text-blue-600 hover:text-blue-800 font-medium" do %>
+        <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Games
+      <% end %>
+    </div>
+
+    <!-- Game Header -->
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+      <div class="bg-gradient-to-r from-blue-500 to-purple-600 p-8 text-white">
+        <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between">
+          <div class="mb-6 lg:mb-0">
+            <div class="flex items-center mb-4">
+              <span class="text-4xl mr-4">🎲</span>
+              <div>
+                <h1 class="text-4xl font-bold mb-2"><%= @lottery_game.name %></h1>
+                <p class="text-blue-100 text-lg">
+                  <%= @lottery_game.description %>
+                </p>
+              </div>
+            </div>
+            <div class="flex flex-wrap gap-4 text-sm">
+              <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                <%= @lottery_game.game_type.humanize %>
+              </span>
+              <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                Next Draw: <%= @next_draw&.draw_date&.strftime("%b %d, %Y at %I:%M %p") || "TBD" %>
+              </span>
+              <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full">
+                Numbers: <%= @lottery_game.numbers_to_draw %> of <%= @lottery_game.max_number %>
+              </span>
+            </div>
+          </div>
+          
+          <!-- Current Jackpot -->
+          <div class="text-center lg:text-right">
+            <div class="text-5xl font-bold mb-2">
+              $<%= number_with_delimiter(@lottery_game.current_prize_pool.to_i) %>
+            </div>
+            <div class="text-blue-100 text-lg">
+              Current Jackpot
+            </div>
+            <div class="mt-4">
+              <div class="text-lg font-semibold">Next Draw:</div>
+              <div class="text-2xl font-bold">
+                <%= time_until_draw(@lottery_game) %>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Interactive Number Picker -->
+    <% if @can_purchase %>
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8" 
+           data-controller="number-picker" 
+           data-number-picker-max-numbers-value="<%= @lottery_game.numbers_to_draw %>"
+           data-number-picker-min-numbers-value="<%= @lottery_game.numbers_to_draw %>"
+           data-number-picker-base-cost-value="<%= @lottery_game.ticket_price %>"
+           data-number-picker-max-range-value="<%= @lottery_game.max_number %>"
+           data-number-picker-lottery-id-value="<%= @lottery_game.id %>">
+        
+        <div class="p-8">
+          <div class="text-center mb-8">
+            <h2 class="text-3xl font-bold text-gray-900 mb-2">Pick Your Lucky Numbers</h2>
+            <p class="text-gray-600">Select <%= @lottery_game.numbers_to_draw %> numbers from 1 to <%= @lottery_game.max_number %></p>
+          </div>
+
+          <!-- Number Selection Grid -->
+          <div class="mb-8">
+            <div class="grid grid-cols-5 sm:grid-cols-8 md:grid-cols-10 gap-2 max-w-4xl mx-auto">
+              <% (1..@lottery_game.max_number).each do |number| %>
+                <button type="button" 
+                        class="w-12 h-12 bg-white text-gray-900 border-2 border-gray-300 rounded-lg font-bold text-lg hover:bg-gray-50 transition-all duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                        data-number="<%= number %>"
+                        data-number-picker-target="number"
+                        data-action="click->number-picker#selectNumber">
+                  <%= number %>
+                </button>
+              <% end %>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="flex flex-col sm:flex-row gap-4 mb-8 max-w-2xl mx-auto">
+            <button type="button" 
+                    class="flex-1 bg-purple-600 hover:bg-purple-700 text-white py-3 px-6 rounded-lg font-bold text-lg transition-colors"
+                    data-action="click->number-picker#quickPick">
+              ⚡ Quick Pick
+            </button>
+            <button type="button" 
+                    class="flex-1 bg-gray-600 hover:bg-gray-700 text-white py-3 px-6 rounded-lg font-bold text-lg transition-colors"
+                    data-action="click->number-picker#clearSelection">
+              🗑️ Clear All
+            </button>
+          </div>
+
+          <!-- Selection Summary -->
+          <div class="bg-gray-50 rounded-xl p-6 max-w-2xl mx-auto">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+              <div>
+                <div class="text-sm font-medium text-gray-600 mb-1">Selected Numbers</div>
+                <div class="text-xl font-bold text-blue-600" data-number-picker-target="selectedNumbers">
+                  No numbers selected
+                </div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-600 mb-1">Your Odds</div>
+                <div class="text-lg font-semibold text-gray-900" data-number-picker-target="odds">
+                  Select numbers to see odds
+                </div>
+              </div>
+              <div>
+                <div class="text-sm font-medium text-gray-600 mb-1">Total Cost</div>
+                <div class="text-2xl font-bold text-green-600" data-number-picker-target="totalCost">
+                  $0.00
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Purchase Button -->
+          <div class="text-center mt-8">
+            <button type="button" 
+                    class="bg-gray-400 text-white py-4 px-8 rounded-xl font-bold text-xl cursor-not-allowed transition-all duration-200"
+                    data-number-picker-target="purchaseButton"
+                    data-action="click->number-picker#purchaseTicket"
+                    disabled>
+              Select <%= @lottery_game.numbers_to_draw %> numbers to continue
+            </button>
+          </div>
+        </div>
+      </div>
+    <% else %>
+      <!-- Cannot Purchase Message -->
+      <div class="bg-white rounded-2xl shadow-xl overflow-hidden mb-8">
+        <div class="p-8 text-center">
+          <div class="text-6xl mb-4">🚫</div>
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Cannot Purchase Tickets</h2>
+          <p class="text-gray-600 mb-6">
+            <% if !current_user.fully_verified? %>
+              You need to complete identity verification before purchasing lottery tickets.
+            <% elsif !@lottery_game.active? %>
+              This lottery game is currently inactive.
+            <% else %>
+              Ticket sales are currently closed for this game.
+            <% end %>
+          </p>
+          <% if !current_user.fully_verified? %>
+            <%= link_to "Complete Verification", onboarding_path, 
+                       class: "bg-blue-600 hover:bg-blue-700 text-white py-3 px-6 rounded-lg font-bold transition-colors" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Game Details Grid -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
+      
+      <!-- Game Information -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- How to Play -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">How to Play</h2>
+          <div class="space-y-4">
+            <div class="flex items-start">
+              <div class="flex-shrink-0 w-8 h-8 bg-<%= game_color(@lottery_game.game_type) %>-500 text-white rounded-full flex items-center justify-center font-bold mr-4">1</div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Choose Your Numbers</h3>
+                <p class="text-gray-600">
+                  Pick <%= @lottery_game.numbers_to_pick %> numbers from <%= @lottery_game.number_range_min %> to <%= @lottery_game.number_range_max %>
+                  <% if @lottery_game.bonus_ball? %>
+                    plus one bonus number from <%= @lottery_game.bonus_range_min %> to <%= @lottery_game.bonus_range_max %>
+                  <% end %>.
+                </p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 w-8 h-8 bg-<%= game_color(@lottery_game.game_type) %>-500 text-white rounded-full flex items-center justify-center font-bold mr-4">2</div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Add Multiplier (Optional)</h3>
+                <p class="text-gray-600">
+                  <% if @lottery_game.multiplier_available? %>
+                    Add the multiplier for just $<%= @lottery_game.multiplier_cost %> to multiply non-jackpot prizes.
+                  <% else %>
+                    Multiplier not available for this game.
+                  <% end %>
+                </p>
+              </div>
+            </div>
+            
+            <div class="flex items-start">
+              <div class="flex-shrink-0 w-8 h-8 bg-<%= game_color(@lottery_game.game_type) %>-500 text-white rounded-full flex items-center justify-center font-bold mr-4">3</div>
+              <div>
+                <h3 class="font-semibold text-gray-900">Wait for the Draw</h3>
+                <p class="text-gray-600">
+                  Draws happen <%= draw_frequency_text(@lottery_game).downcase %>. Check back to see if you've won!
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Draws -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-2xl font-bold text-gray-900 mb-4">Recent Draws</h2>
+          <% if @recent_draws.any? %>
+            <div class="space-y-4">
+              <% @recent_draws.each do |draw| %>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <div class="font-semibold text-gray-900">
+                      <%= draw.draw_date.strftime("%B %d, %Y at %I:%M %p") %>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      Jackpot: $<%= number_with_delimiter(draw.jackpot_amount.to_i) %>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <div class="flex space-x-2 mb-2">
+                      <% winning_numbers_display(draw.winning_numbers).each do |number| %>
+                        <span class="w-8 h-8 bg-<%= game_color(@lottery_game.game_type) %>-500 text-white rounded-full flex items-center justify-center text-sm font-bold">
+                          <%= number %>
+                        </span>
+                      <% end %>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      <%= pluralize(draw.tickets.where(status: 'won').count, 'winner') %>
+                    </div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <div class="text-center py-8 text-gray-500">
+              <div class="text-4xl mb-4">🎲</div>
+              <p>No draws yet. Be the first to play!</p>
+            </div>
+          <% end %>
+        </div>
+
+        <!-- Your Recent Tickets -->
+        <% if @user_tickets.any? %>
+          <div class="bg-white rounded-xl shadow-lg p-6">
+            <h2 class="text-2xl font-bold text-gray-900 mb-4">Your Recent Tickets</h2>
+            <div class="space-y-3">
+              <% @user_tickets.each do |ticket| %>
+                <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
+                  <div>
+                    <div class="flex space-x-2 mb-2">
+                      <% winning_numbers_display(ticket.numbers).each do |number| %>
+                        <span class="w-8 h-8 bg-gray-300 text-gray-700 rounded-full flex items-center justify-center text-sm font-bold">
+                          <%= number %>
+                        </span>
+                      <% end %>
+                    </div>
+                    <div class="text-sm text-gray-600">
+                      Purchased: <%= ticket.purchase_date&.strftime("%m/%d/%Y") %>
+                    </div>
+                  </div>
+                  <div class="text-right">
+                    <%= ticket_status_badge(ticket) %>
+                    <% if ticket.prize_amount && ticket.prize_amount > 0 %>
+                      <div class="text-lg font-bold text-green-600 mt-1">
+                        $<%= number_with_delimiter(ticket.prize_amount.to_i) %>
+                      </div>
+                    <% end %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+            <div class="mt-4 text-center">
+              <%= link_to tickets_path, class: "text-#{game_color(@lottery_game.game_type)}-600 hover:text-#{game_color(@lottery_game.game_type)}-800 font-medium" do %>
+                View All Your Tickets →
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        
+        <!-- Game Stats -->
+        <div class="bg-white rounded-xl shadow-lg p-6" id="stats">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Game Statistics</h2>
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Ticket Price:</span>
+              <span class="font-semibold">$<%= @lottery_game.ticket_price %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Total Tickets Sold:</span>
+              <span class="font-semibold"><%= number_with_delimiter(@total_tickets_sold) %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Average Jackpot:</span>
+              <span class="font-semibold">$<%= number_with_delimiter(@average_jackpot.to_i) %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Biggest Win:</span>
+              <span class="font-semibold text-green-600">$<%= number_with_delimiter(@biggest_win.to_i) %></span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Win Frequency:</span>
+              <span class="font-semibold"><%= @win_frequency %>%</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-gray-600">Overall Odds:</span>
+              <span class="font-semibold"><%= odds_text(@lottery_game) %></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Prize Structure -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Prize Structure</h2>
+          <div class="space-y-3">
+            <% (@lottery_game.numbers_to_pick).downto(3).each do |matches| %>
+              <div class="flex justify-between items-center p-3 bg-gray-50 rounded-lg">
+                <div>
+                  <div class="font-semibold text-gray-900">
+                    <%= prize_tier_name(matches, @lottery_game) %>
+                  </div>
+                  <div class="text-sm text-gray-600">
+                    Match <%= matches %><%= matches == @lottery_game.numbers_to_pick ? '' : " of #{@lottery_game.numbers_to_pick}" %>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="font-bold text-<%= game_color(@lottery_game.game_type) %>-600">
+                    <% if matches == @lottery_game.numbers_to_pick %>
+                      Jackpot
+                    <% else %>
+                      $<%= number_with_delimiter((100 * (matches.to_f / @lottery_game.numbers_to_pick)).to_i) %>
+                    <% end %>
+                  </div>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Quick Facts -->
+        <div class="bg-white rounded-xl shadow-lg p-6">
+          <h2 class="text-xl font-bold text-gray-900 mb-4">Quick Facts</h2>
+          <div class="space-y-3 text-sm">
+            <div class="flex items-center">
+              <span class="text-2xl mr-3">🎯</span>
+              <span class="text-gray-600">Pick <%= @lottery_game.numbers_to_pick %> numbers</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-2xl mr-3">💰</span>
+              <span class="text-gray-600">$<%= @lottery_game.ticket_price %> per ticket</span>
+            </div>
+            <div class="flex items-center">
+              <span class="text-2xl mr-3">⏰</span>
+              <span class="text-gray-600"><%= draw_frequency_text(@lottery_game) %></span>
+            </div>
+            <% if @lottery_game.multiplier_available? %>
+              <div class="flex items-center">
+                <span class="text-2xl mr-3">⚡</span>
+                <span class="text-gray-600">Multiplier available (+$<%= @lottery_game.multiplier_cost %>)</span>
+              </div>
+            <% end %>
+            <div class="flex items-center">
+              <span class="text-2xl mr-3">🎲</span>
+              <span class="text-gray-600">Odds: <%= odds_text(@lottery_game) %></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Responsible Gaming Notice -->
+    <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-semibold text-yellow-800">Play Responsibly</h3>
+          <p class="text-yellow-700 mt-1">
+            Remember: lottery games are for entertainment only. Never spend more than you can afford to lose.
+            Set spending limits and take breaks. If gambling becomes a problem, seek help immediately.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

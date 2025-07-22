@@ -6,6 +6,11 @@ class Lottery < ApplicationRecord
   has_many :drawn_numbers, dependent: :destroy
   has_many :payout_logs, dependent: :nullify
 
+  # New associations for redesigned lottery system
+  has_many :draws, dependent: :destroy
+  has_many :tickets, dependent: :destroy
+  has_many :subscriptions, dependent: :destroy
+
   # Enums
   enum "status", { draft: 0, active: 1, ended: 2 }
   enum "payout_strategy", { pool: 0, owner: 1, split_payout: 2 }
@@ -46,15 +51,93 @@ class Lottery < ApplicationRecord
   def next_draw_at
     return nil unless active? && deployed_at
 
-    # Get the most recent drawn number's timestamp, if any
-    last_draw = drawn_numbers.order(created_at: :desc).first
+    # Get the most recent draw, if any
+    last_draw = draws.order(draw_date: :desc).first
 
     if last_draw
-      # Next draw is 24 hours after the last draw
-      last_draw.created_at + 24.hours
+      # Next draw is based on lottery frequency (default 24 hours)
+      last_draw.draw_date + draw_frequency.hours
     else
       # If no draws yet, next draw is 24 hours after deployment
       deployed_at + 24.hours
+    end
+  end
+
+  # New methods for redesigned lottery system
+  def ticket_cost
+    cost_per_number * numbers_to_draw
+  end
+
+  def numbers_to_draw
+    max_numbers_to_draw
+  end
+
+  def max_number
+    odds_json&.dig("max_number") || 49 # Default to 49 like most lotteries
+  end
+
+  def min_matches_to_win
+    odds_json&.dig("min_matches_to_win") || 3
+  end
+
+  def draw_frequency
+    odds_json&.dig("draw_frequency_hours") || 24
+  end
+
+  def prize_multiplier_for_matches(matches)
+    multipliers = odds_json&.dig("prize_multipliers") || {
+      "3" => 2,
+      "4" => 10,
+      "5" => 100,
+      "6" => 1000
+    }
+    multipliers[matches.to_s]&.to_f || 1.0
+  end
+
+  def next_draw
+    draws.upcoming.order(:draw_date).first
+  end
+
+  def latest_draw
+    draws.completed.order(draw_date: :desc).first
+  end
+
+  def create_next_draw
+    next_date = next_draw_at || 24.hours.from_now
+
+    draws.create!(
+      draw_date: next_date,
+      jackpot_amount: calculate_next_jackpot,
+      status: :scheduled
+    )
+  end
+
+  def total_tickets_sold
+    tickets.count
+  end
+
+  def total_revenue
+    tickets.sum(:cost) || 0
+  end
+
+  def total_prizes_paid
+    tickets.winning_tickets.sum(:prize_amount) || 0
+  end
+
+  def active_subscriptions_count
+    subscriptions.active_subscriptions.count
+  end
+
+  private
+
+  def calculate_next_jackpot
+    base_jackpot = odds_json&.dig("base_jackpot") || 1000.0
+
+    # Add rollover from previous draws if no winners
+    if latest_draw && latest_draw.total_winners == 0
+      base_jackpot + latest_draw.jackpot_amount
+    else
+      base_jackpot
     end
   end
 

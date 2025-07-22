@@ -68,7 +68,7 @@
               <div class="hidden absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50" 
                    data-dropdown-target="menu">
                 <%= link_to "Dashboard", admin_dashboard_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
-                <%= link_to "Manage Users", admin_dashboard_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
+                <%= link_to "Manage Users", admin_users_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 <%= link_to "Manage Lotteries", admin_lotteries_path, class: "block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" %>
                 
                 <div class="border-t border-gray-100 my-1"></div>
@@ -188,7 +188,7 @@
         <div class="border-t border-gray-200 mt-2 pt-2">
           <div class="px-3 py-2 text-base font-medium text-gray-900">Admin</div>
           <%= link_to "Manage Lotteries", admin_lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
-          <%= link_to "Manage Users", admin_dashboard_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
+          <%= link_to "Manage Users", admin_users_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
           <%= link_to "Feature Requests", admin_feature_requests_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
           <%= link_to "Lottery Game Requests", feature_requests_lotteries_path, class: "block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:bg-gray-100 pl-6" %>
         </div>

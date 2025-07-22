@@ -1,0 +1,163 @@
+<div class="container mx-auto px-4 py-8">
+  <div class="flex justify-between items-center mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-gray-900">Edit Prize Claim</h1>
+      <p class="text-gray-600 mt-2">Claim #<%= @prize_claim.id %> - <%= @prize_claim.lottery_game.name %></p>
+    </div>
+    
+    <div class="flex space-x-4">
+      <%= link_to "Back to Claim", admin_prize_claim_path(@prize_claim), 
+                 class: "bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-lg font-medium transition-colors" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <!-- Edit Form -->
+    <div class="lg:col-span-2">
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold text-gray-900 mb-6">Prize Claim Details</h2>
+        
+        <%= form_with model: [:admin, @prize_claim], local: true, class: "space-y-6" do |form| %>
+          <% if @prize_claim.errors.any? %>
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4">
+              <div class="flex">
+                <svg class="w-5 h-5 text-red-400" fill="currentColor" viewBox="0 0 20 20">
+                  <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"></path>
+                </svg>
+                <div class="ml-3">
+                  <h3 class="text-sm font-medium text-red-800">Please fix the following errors:</h3>
+                  <ul class="mt-2 text-sm text-red-700 list-disc list-inside">
+                    <% @prize_claim.errors.full_messages.each do |message| %>
+                      <li><%= message %></li>
+                    <% end %>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- Status Selection -->
+          <div>
+            <%= form.label :status, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.select :status, 
+                           options_for_select([
+                             ['Pending', 'pending'],
+                             ['Auto-Credited', 'auto_credited'],
+                             ['Manual Claim Required', 'manual_claim_required'],
+                             ['Claimed', 'claimed'],
+                             ['Expired', 'expired']
+                           ], @prize_claim.status),
+                           {},
+                           { class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" } %>
+            <p class="text-sm text-gray-500 mt-1">Change the status of this prize claim. Use with caution.</p>
+          </div>
+
+          <!-- Processing Notes -->
+          <div>
+            <%= form.label :processing_notes, class: "block text-sm font-medium text-gray-700 mb-2" %>
+            <%= form.text_area :processing_notes, 
+                              rows: 6,
+                              placeholder: "Add processing notes, admin comments, or special instructions...",
+                              class: "w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent" %>
+            <p class="text-sm text-gray-500 mt-1">These notes are for internal admin use and will be logged with the claim.</p>
+          </div>
+
+          <!-- Form Actions -->
+          <div class="flex justify-end space-x-4 pt-6 border-t border-gray-200">
+            <%= link_to "Cancel", admin_prize_claim_path(@prize_claim), 
+                       class: "px-6 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 font-medium transition-colors" %>
+            <%= form.submit "Update Prize Claim", 
+                           class: "px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar Information -->
+    <div class="space-y-6">
+      <!-- Current Claim Summary -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Current Claim Summary</h3>
+        
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-600">Prize Amount:</span>
+            <span class="text-sm font-medium text-gray-900">$<%= number_with_delimiter(@prize_claim.prize_amount) %></span>
+          </div>
+          
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-600">Tax Withholding:</span>
+            <span class="text-sm font-medium text-gray-900">
+              <% if @prize_claim.tax_withholding_amount.present? %>
+                $<%= number_with_delimiter(@prize_claim.tax_withholding_amount) %>
+              <% else %>
+                $0.00
+              <% end %>
+            </span>
+          </div>
+          
+          <div class="flex justify-between border-t pt-2">
+            <span class="text-sm font-medium text-gray-900">Net Amount:</span>
+            <span class="text-sm font-bold text-green-600">$<%= number_with_delimiter(@prize_claim.net_prize_amount) %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- User Information -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Winner Information</h3>
+        
+        <div class="space-y-3">
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Name</label>
+            <p class="text-sm text-gray-900"><%= @prize_claim.user.name %></p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Email</label>
+            <p class="text-sm text-gray-900"><%= @prize_claim.user.email %></p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700">State</label>
+            <p class="text-sm text-gray-900">
+              <%= @prize_claim.user.state_jurisdiction&.name || "Not specified" %>
+            </p>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700">Verification Status</label>
+            <% if @prize_claim.user.fully_verified? %>
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">Fully Verified</span>
+            <% else %>
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">Pending Verification</span>
+            <% end %>
+          </div>
+        </div>
+        
+        <div class="mt-4 pt-4 border-t border-gray-200">
+          <%= link_to "View User Profile", admin_user_path(@prize_claim.user), 
+                     class: "text-blue-600 hover:text-blue-900 text-sm font-medium" %>
+        </div>
+      </div>
+
+      <!-- Important Notes -->
+      <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+        <div class="flex">
+          <svg class="w-5 h-5 text-yellow-400 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+            <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"></path>
+          </svg>
+          <div class="ml-3">
+            <h3 class="text-sm font-medium text-yellow-800">Important</h3>
+            <div class="text-sm text-yellow-700 mt-1 space-y-1">
+              <p>• Status changes are permanent and logged</p>
+              <p>• Manual processing requires user verification</p>
+              <p>• Tax withholding is calculated automatically</p>
+              <p>• Expired claims cannot be reopened</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

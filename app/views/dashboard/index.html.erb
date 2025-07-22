@@ -1,49 +1,292 @@
-<div class="min-h-screen bg-gradient-to-b from-indigo-50 to-white">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-    <div class="mb-8">
-      <h1 class="text-3xl font-extrabold text-indigo-900">Welcome, <%= current_user.name %></h1>
-      <p class="text-gray-600 mt-1">@<%= current_user.username %></p>
-      <p class="mt-2 text-sm text-gray-600">Your ethical lottery dashboard</p>
+<div class="min-h-screen bg-gray-50">
+  <!-- Header -->
+  <div class="bg-white shadow">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center py-6">
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Dashboard</h1>
+          <p class="text-sm text-gray-600">Welcome back, <%= @user.name || @user.username %>!</p>
+        </div>
+        <div class="flex items-center space-x-4">
+          <div class="text-right">
+            <p class="text-sm text-gray-500">Account Balance</p>
+            <p class="text-lg font-semibold text-green-600">$<%= number_with_precision(@user.account_balance, precision: 2) %></p>
+          </div>
+          <%= link_to "Add Funds", "#", class: "bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-md text-sm font-medium" %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-8 w-8 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Active Tickets</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @active_tickets.count %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-8 w-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Total Winnings</dt>
+              <dd class="text-lg font-medium text-gray-900">$<%= number_with_precision(@total_winnings, precision: 2) %></dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-8 w-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">This Month</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @tickets_this_month %> tickets</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-lg shadow p-6">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <svg class="h-8 w-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path>
+            </svg>
+          </div>
+          <div class="ml-5 w-0 flex-1">
+            <dl>
+              <dt class="text-sm font-medium text-gray-500 truncate">Subscriptions</dt>
+              <dd class="text-lg font-medium text-gray-900"><%= @active_subscriptions.count %> active</dd>
+            </dl>
+          </div>
+        </div>
+      </div>
     </div>
 
-    <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-      <!-- Active Bets Card -->
-      <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
-        <div class="px-4 py-5 sm:px-6">
-          <h3 class="text-lg font-medium text-gray-900">Your Active Bets</h3>
-          <p class="mt-1 max-w-2xl text-sm text-gray-500">Bets you've placed in active lotteries</p>
-        </div>
-        <div class="px-4 py-5 sm:p-6">
-          <% if current_user.bets.count > 0 %>
-            <div class="space-y-4">
-              <% current_user.bets.limit(5).each do |bet| %>
-                <div class="border border-gray-200 rounded-md p-4 hover:bg-gray-50">
-                  <div class="flex justify-between">
-                    <span class="text-sm font-medium text-gray-900">Lottery #<%= bet.lottery_id %></span>
-                    <span class="text-xs text-gray-500"><%= bet.created_at.strftime("%b %d, %Y") %></span>
-                  </div>
-                  <div class="mt-2 flex justify-between items-center">
-                    <span class="text-sm text-gray-600">Bet ID: <%= bet.id %></span>
-                    <%= link_to "View Details", bet_path(bet), class: "text-xs text-indigo-600 hover:text-indigo-900" %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-            <div class="mt-4 text-center">
-              <%= link_to "View All Bets", lotteries_path, class: "text-sm text-indigo-600 hover:text-indigo-900" %>
-            </div>
-          <% else %>
-            <div class="text-center py-4">
-              <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-              </svg>
-              <h3 class="mt-2 text-sm font-medium text-gray-900">No bets yet</h3>
-              <p class="mt-1 text-sm text-gray-500">Get started by placing your first bet!</p>
-              <div class="mt-6">
-                <%= link_to "Browse Lotteries", lotteries_path, class: "inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <!-- Main Content -->
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Jackpot Highlight -->
+        <% if @jackpot_lottery %>
+          <div class="bg-gradient-to-r from-yellow-400 to-orange-500 rounded-lg shadow-lg p-6 text-white">
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-2xl font-bold"><%= @jackpot_lottery.name %></h2>
+                <p class="text-yellow-100">Next Draw: <%= @jackpot_lottery.draws.scheduled.first&.draw_date&.strftime('%B %d, %Y at %I:%M %p') || 'TBA' %></p>
+              </div>
+              <div class="text-right">
+                <p class="text-sm text-yellow-100">Current Jackpot</p>
+                <p class="text-3xl font-bold">$<%= number_with_delimiter(@jackpot_lottery.draws.scheduled.first&.jackpot_amount || 0) %></p>
               </div>
             </div>
-          <% end %>
+            <div class="mt-4">
+              <%= link_to "Play Now", lottery_path(@jackpot_lottery), class: "bg-white text-orange-600 px-6 py-2 rounded-md font-medium hover:bg-gray-100 transition duration-150" %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Active Tickets -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Your Active Tickets</h3>
+            <p class="mt-1 max-w-2xl text-sm text-gray-500">Tickets entered in upcoming draws</p>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <% if @active_tickets.any? %>
+              <div class="space-y-4">
+                <% @active_tickets.each do |ticket| %>
+                  <div class="border border-gray-200 rounded-lg p-4 hover:bg-gray-50">
+                    <div class="flex items-center justify-between">
+                      <div>
+                        <h4 class="text-sm font-medium text-gray-900"><%= ticket.lottery.name %></h4>
+                        <p class="text-sm text-gray-500">Ticket #<%= ticket.id %></p>
+                        <div class="flex items-center space-x-1 mt-2">
+                          <% ticket.numbers.each do |number| %>
+                            <span class="inline-flex items-center justify-center h-8 w-8 bg-indigo-100 text-indigo-800 text-sm font-medium rounded-full"><%= number %></span>
+                          <% end %>
+                        </div>
+                      </div>
+                      <div class="text-right">
+                        <p class="text-sm text-gray-500">Draw Date</p>
+                        <p class="text-sm font-medium text-gray-900"><%= ticket.draw&.draw_date&.strftime('%m/%d/%Y') || 'TBA' %></p>
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 mt-1">
+                          <%= ticket.status.humanize %>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                <% end %>
+              </div>
+              <div class="mt-4">
+                <%= link_to "View All Tickets", "#", class: "text-indigo-600 hover:text-indigo-500 text-sm font-medium" %>
+              </div>
+            <% else %>
+              <div class="text-center py-8">
+                <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                </svg>
+                <h3 class="mt-2 text-sm font-medium text-gray-900">No active tickets</h3>
+                <p class="mt-1 text-sm text-gray-500">Get started by purchasing your first lottery ticket.</p>
+                <div class="mt-6">
+                  <%= link_to "Browse Lotteries", lotteries_path, class: "inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700" %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Recent Activity -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Recent Activity</h3>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <% if @recent_tickets.any? %>
+              <div class="flow-root">
+                <ul class="-mb-8">
+                  <% @recent_tickets.first(5).each_with_index do |ticket, index| %>
+                    <li>
+                      <div class="relative pb-8">
+                        <% unless index == @recent_tickets.first(5).length - 1 %>
+                          <span class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true"></span>
+                        <% end %>
+                        <div class="relative flex space-x-3">
+                          <div>
+                            <span class="h-8 w-8 rounded-full bg-indigo-500 flex items-center justify-center ring-8 ring-white">
+                              <svg class="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                              </svg>
+                            </span>
+                          </div>
+                          <div class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4">
+                            <div>
+                              <p class="text-sm text-gray-500">Purchased ticket for <span class="font-medium text-gray-900"><%= ticket.lottery.name %></span></p>
+                            </div>
+                            <div class="text-right text-sm whitespace-nowrap text-gray-500">
+                              <time datetime="<%= ticket.created_at.iso8601 %>"><%= time_ago_in_words(ticket.created_at) %> ago</time>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </li>
+                  <% end %>
+                </ul>
+              </div>
+            <% else %>
+              <p class="text-sm text-gray-500">No recent activity</p>
+            <% end %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar -->
+      <div class="space-y-6">
+        <!-- Quick Actions -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Quick Actions</h3>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <div class="space-y-3">
+              <%= link_to lotteries_path, class: "w-full flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" do %>
+                <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 5v2m0 4v2m0 4v2M5 5a2 2 0 00-2 2v3a2 2 0 110 4v3a2 2 0 002 2h14a2 2 0 002-2v-3a2 2 0 110-4V7a2 2 0 00-2-2H5z"></path>
+                </svg>
+                Buy Tickets
+              <% end %>
+              
+              <%= link_to "#", class: "w-full flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" do %>
+                <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"></path>
+                </svg>
+                Add Funds
+              <% end %>
+              
+              <%= link_to "#", class: "w-full flex items-center px-4 py-2 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50" do %>
+                <svg class="-ml-1 mr-2 h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v10a2 2 0 002 2h8a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
+                </svg>
+                View Results
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <!-- Upcoming Draws -->
+        <div class="bg-white shadow rounded-lg">
+          <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+            <h3 class="text-lg leading-6 font-medium text-gray-900">Upcoming Draws</h3>
+          </div>
+          <div class="px-4 py-5 sm:p-6">
+            <% if @upcoming_draws.any? %>
+              <div class="space-y-4">
+                <% @upcoming_draws.each do |draw| %>
+                  <div class="border-l-4 border-indigo-400 pl-4">
+                    <h4 class="text-sm font-medium text-gray-900"><%= draw.lottery.name %></h4>
+                    <p class="text-sm text-gray-500"><%= draw.draw_date.strftime('%B %d, %Y at %I:%M %p') %></p>
+                    <p class="text-sm font-medium text-indigo-600">$<%= number_with_delimiter(draw.jackpot_amount) %></p>
+                  </div>
+                <% end %>
+              </div>
+            <% else %>
+              <p class="text-sm text-gray-500">No upcoming draws</p>
+            <% end %>
+          </div>
+        </div>
+
+        <!-- Active Subscriptions -->
+        <% if @active_subscriptions.any? %>
+          <div class="bg-white shadow rounded-lg">
+            <div class="px-4 py-5 sm:px-6 border-b border-gray-200">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">Active Subscriptions</h3>
+            </div>
+            <div class="px-4 py-5 sm:p-6">
+              <div class="space-y-3">
+                <% @active_subscriptions.each do |subscription| %>
+                  <div class="flex items-center justify-between">
+                    <div>
+                      <p class="text-sm font-medium text-gray-900"><%= subscription.lottery.name %></p>
+                      <p class="text-sm text-gray-500"><%= subscription.frequency.humanize %></p>
+                    </div>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Active
+                    </span>
+                  </div>
+                <% end %>
+              </div>
+              <div class="mt-4">
+                <%= link_to "Manage Subscriptions", "#", class: "text-indigo-600 hover:text-indigo-500 text-sm font-medium" %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
         </div>
       </div>
 
@@ -54,10 +297,22 @@
           <p class="mt-1 max-w-2xl text-sm text-gray-500">Your recent lottery payouts</p>
         </div>
         <div class="px-4 py-5 sm:p-6">
-          <% if current_user.bets.joins(:payout_logs).count > 0 %>
-            <!-- Show winnings here -->
+          <% if @winning_tickets.any? %>
             <div class="space-y-4">
-              <!-- Placeholder for winnings -->
+              <% @winning_tickets.each do |ticket| %>
+                <div class="border border-gray-200 rounded-lg p-4">
+                  <div class="flex justify-between">
+                    <span class="text-sm font-medium text-gray-900"><%= ticket.lottery_game.name %></span>
+                    <span class="text-xs text-gray-500"><%= ticket.created_at.strftime("%b %d, %Y") %></span>
+                  </div>
+                  <div class="mt-2 flex justify-between items-center">
+                    <span class="text-sm text-gray-600">Prize: $<%= number_with_precision(ticket.prize_amount || 0, precision: 2) %></span>
+                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                      Won
+                    </span>
+                  </div>
+                </div>
+              <% end %>
             </div>
           <% else %>
             <div class="text-center py-4">
@@ -65,7 +320,7 @@
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
               </svg>
               <h3 class="mt-2 text-sm font-medium text-gray-900">No winnings yet</h3>
-              <p class="mt-1 text-sm text-gray-500">Place bets to have a chance of winning!</p>
+              <p class="mt-1 text-sm text-gray-500">Purchase lottery tickets to have a chance of winning!</p>
             </div>
           <% end %>
         </div>
@@ -115,39 +370,39 @@
     <div class="mt-8">
       <h2 class="text-xl font-semibold text-gray-900 mb-4">Featured Lotteries</h2>
       <div class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        <!-- This will be populated with active lotteries -->
-        <% Lottery.active_lotteries.limit(3).each do |lottery| %>
+        <!-- This will be populated with active lottery games -->
+        <% @featured_lottery_games.each do |lottery_game| %>
           <div class="bg-white overflow-hidden shadow rounded-lg divide-y divide-gray-200">
             <div class="px-4 py-5 sm:px-6 bg-gradient-to-r from-indigo-500 to-purple-600">
-              <h3 class="text-lg font-medium text-white"><%= lottery.name %></h3>
+              <h3 class="text-lg font-medium text-white"><%= lottery_game.name %></h3>
             </div>
             <div class="px-4 py-5 sm:p-6">
               <div class="space-y-4">
                 <div>
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-500">Current Pot:</span>
-                    <span class="font-medium text-gray-900">$<%= number_with_precision(lottery.current_payout, precision: 2) %></span>
+                    <span class="font-medium text-gray-900">$<%= number_with_delimiter(lottery_game.current_jackpot) %></span>
                   </div>
                 </div>
                 <div>
                   <div class="flex justify-between text-sm">
                     <span class="text-gray-500">Time Remaining:</span>
-                    <% if lottery.next_draw_at.present? %>
-                      <span class="font-medium text-gray-900" data-controller="countdown" data-countdown-target="timer" data-countdown-end-value="<%= lottery.next_draw_at.to_i * 1000 %>"></span>
+                    <% if lottery_game.next_draw_at.present? %>
+                      <span class="font-medium text-gray-900" data-controller="countdown" data-countdown-target="timer" data-countdown-end-value="<%= lottery_game.next_draw_at.to_i * 1000 %>"></span>
                     <% else %>
                       <span class="font-medium text-gray-500">Not scheduled</span>
                     <% end %>
                   </div>
                 </div>
                 <div class="pt-4">
-                  <%= link_to "View Details", lottery_path(lottery), class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
+                  <%= link_to "View Details", lottery_game_path(lottery_game), class: "w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" %>
                 </div>
               </div>
             </div>
           </div>
         <% end %>
 
-        <% if Lottery.active_lotteries.count == 0 %>
+        <% if @featured_lottery_games.empty? %>
           <div class="col-span-3 bg-white overflow-hidden shadow rounded-lg">
             <div class="px-4 py-12 sm:px-6 text-center">
               <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

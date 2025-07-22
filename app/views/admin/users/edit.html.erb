@@ -1,0 +1,198 @@
+<% content_for :title, "Edit User - #{@user.name || @user.email}" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg">
+  <!-- Header Section -->
+  <div class="px-6 py-4 border-b border-gray-200">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Edit User</h1>
+        <p class="text-sm text-gray-600 mt-1">Update user account information and settings</p>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to "View User", admin_user_path(@user), 
+            class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+        <%= link_to "Back to Users", admin_users_path, 
+            class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="p-6">
+    <%= form_with model: @user, url: admin_user_path(@user), method: :patch, local: true, class: "space-y-6" do |form| %>
+      <% if @user.errors.any? %>
+        <div class="bg-red-50 border border-red-200 rounded-md p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-red-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-red-800">There were <%= pluralize(@user.errors.count, "error") %> with your submission:</h3>
+              <div class="mt-2 text-sm text-red-700">
+                <ul class="list-disc pl-5 space-y-1">
+                  <% @user.errors.full_messages.each do |message| %>
+                    <li><%= message %></li>
+                  <% end %>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <!-- Basic Information -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :name, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :name, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          
+          <div>
+            <%= form.label :email, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.email_field :email, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          
+          <div>
+            <%= form.label :username, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.text_field :username, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          
+          <div>
+            <%= form.label :phone_number, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.telephone_field :phone_number, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          
+          <div>
+            <%= form.label :date_of_birth, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.date_field :date_of_birth, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+          </div>
+          
+          <div>
+            <%= form.label :state_jurisdiction_id, "State Jurisdiction", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.collection_select :state_jurisdiction_id, 
+                StateJurisdiction.all, :id, :state_name, 
+                { prompt: 'Select State' }, 
+                { class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Settings -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Settings</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div>
+            <%= form.label :account_balance, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.number_field :account_balance, step: 0.01, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500">Current balance in USD</p>
+          </div>
+          
+          <div>
+            <%= form.label :role, class: "block text-sm font-medium text-gray-700" %>
+            <%= form.select :role, 
+                options_for_select([
+                  ['Player', 'player'],
+                  ['Super Admin', 'super_admin']
+                ], @user.super_admin? ? 'super_admin' : 'player'), 
+                {}, 
+                { class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+          </div>
+        </div>
+        
+        <div class="mt-6">
+          <div class="flex items-center">
+            <%= form.check_box :self_excluded, class: "h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded" %>
+            <%= form.label :self_excluded, "Self-excluded from gambling", class: "ml-2 block text-sm text-gray-900" %>
+          </div>
+          <p class="mt-1 text-sm text-gray-500">Check to exclude user from all gambling activities</p>
+        </div>
+      </div>
+
+      <!-- Spending Limits -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Spending Limits</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div>
+            <%= form.label :spending_limit_daily, "Daily Limit ($)", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.number_field :spending_limit_daily, step: 0.01, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500">Maximum daily spending</p>
+          </div>
+          
+          <div>
+            <%= form.label :spending_limit_weekly, "Weekly Limit ($)", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.number_field :spending_limit_weekly, step: 0.01, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500">Maximum weekly spending</p>
+          </div>
+          
+          <div>
+            <%= form.label :spending_limit_monthly, "Monthly Limit ($)", class: "block text-sm font-medium text-gray-700" %>
+            <%= form.number_field :spending_limit_monthly, step: 0.01, 
+                class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            <p class="mt-1 text-sm text-gray-500">Maximum monthly spending</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identity Verification Status -->
+      <% if @user.identity_verification %>
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Identity Verification</h3>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Current Status</label>
+              <span class="mt-1 inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @user.identity_verification.verified? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= @user.identity_verification.status.humanize %>
+              </span>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Document Type</label>
+              <p class="mt-1 text-sm text-gray-900"><%= @user.identity_verification.document_type || 'Not specified' %></p>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700">SSN (Last 4)</label>
+              <p class="mt-1 text-sm text-gray-900">***-**-<%= @user.identity_verification.ssn_last_four %></p>
+            </div>
+            
+            <div>
+              <label class="block text-sm font-medium text-gray-700">Address</label>
+              <p class="mt-1 text-sm text-gray-900"><%= @user.identity_verification.full_address %></p>
+            </div>
+          </div>
+          
+          <% unless @user.identity_verification.verified? %>
+            <div class="mt-4 flex space-x-3">
+              <%= link_to "Verify Identity", verify_identity_admin_user_path(@user), method: :post, 
+                  class: "px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700" %>
+              <%= link_to "Reject Identity", reject_identity_admin_user_path(@user), method: :post, 
+                  class: "px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700",
+                  confirm: "Are you sure you want to reject this identity verification?" %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Form Actions -->
+      <div class="flex justify-end space-x-3 pt-6 border-t border-gray-200">
+        <%= link_to "Cancel", admin_user_path(@user), 
+            class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400" %>
+        <%= form.submit "Update User", 
+            class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+      </div>
+    <% end %>
+  </div>
+</div>
+</div>

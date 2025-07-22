@@ -1,0 +1,211 @@
+<% content_for :title, "Instant Games" %>
+
+<div class="min-h-screen bg-gradient-to-br from-purple-50 to-pink-100">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Instant Win Games</h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        Scratch and win instantly! Digital scratch-off games with real prizes and instant results.
+      </p>
+    </div>
+
+    <!-- Price Filter -->
+    <div class="mb-8">
+      <div class="flex flex-wrap justify-center gap-4">
+        <%= link_to instant_games_path, 
+            class: "px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition-colors" do %>
+          All Games
+        <% end %>
+        <%= link_to instant_games_path(price: '1'), 
+            class: "px-6 py-3 bg-white text-purple-600 border-2 border-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors" do %>
+          $1 Games
+        <% end %>
+        <%= link_to instant_games_path(price: '5'), 
+            class: "px-6 py-3 bg-white text-purple-600 border-2 border-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors" do %>
+          $5 Games
+        <% end %>
+        <%= link_to instant_games_path(price: '10'), 
+            class: "px-6 py-3 bg-white text-purple-600 border-2 border-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition-colors" do %>
+          $10+ Games
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Games Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @instant_games.each do |game| %>
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden transform hover:scale-105">
+          <!-- Game Card Design -->
+          <div class="relative">
+            <!-- Scratch-off Card Design -->
+            <div class="h-48 bg-gradient-to-br from-<%= instant_game_color(game.ticket_price) %>-400 to-<%= instant_game_color(game.ticket_price) %>-600 p-6 text-white relative overflow-hidden">
+              <!-- Background Pattern -->
+              <div class="absolute inset-0 opacity-20">
+                <div class="grid grid-cols-8 grid-rows-8 h-full">
+                  <% 64.times do %>
+                    <div class="border border-white border-opacity-30"></div>
+                  <% end %>
+                </div>
+              </div>
+              
+              <!-- Game Title -->
+              <div class="relative z-10">
+                <h3 class="text-2xl font-bold mb-2"><%= game.name %></h3>
+                <p class="text-<%= instant_game_color(game.ticket_price) %>-100 text-sm mb-4">
+                  <%= game.description %>
+                </p>
+                
+                <!-- Price Badge -->
+                <div class="absolute top-0 right-0 bg-white text-<%= instant_game_color(game.ticket_price) %>-600 px-3 py-1 rounded-bl-lg font-bold text-lg">
+                  $<%= game.ticket_price %>
+                </div>
+                
+                <!-- Top Prize -->
+                <div class="absolute bottom-0 left-0 right-0">
+                  <div class="text-center">
+                    <div class="text-sm text-<%= instant_game_color(game.ticket_price) %>-100">Top Prize</div>
+                    <div class="text-2xl font-bold">
+                      $<%= number_with_delimiter(game.top_prize.to_i) %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Game Details -->
+            <div class="p-6">
+              <!-- Game Stats -->
+              <div class="space-y-3 mb-6">
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-600">Tickets Remaining:</span>
+                  <span class="font-semibold text-<%= instant_game_color(game.ticket_price) %>-600">
+                    <%= number_with_delimiter(game.tickets_remaining) %>
+                  </span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-600">Overall Odds:</span>
+                  <span class="font-semibold">1 in <%= game.overall_odds %></span>
+                </div>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-600">Total Prizes:</span>
+                  <span class="font-semibold">
+                    $<%= number_with_delimiter(game.total_prize_value.to_i) %>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Progress Bar -->
+              <div class="mb-6">
+                <div class="flex justify-between text-sm text-gray-600 mb-2">
+                  <span>Tickets Sold</span>
+                  <span><%= number_with_delimiter(game.total_tickets - game.tickets_remaining) %> / <%= number_with_delimiter(game.total_tickets) %></span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div class="bg-<%= instant_game_color(game.ticket_price) %>-500 h-2 rounded-full transition-all duration-300" 
+                       style="width: <%= ((game.total_tickets - game.tickets_remaining).to_f / game.total_tickets * 100).round(1) %>%"></div>
+                </div>
+              </div>
+
+              <!-- Action Buttons -->
+              <div class="space-y-3">
+                <% if game.can_purchase? %>
+                  <%= link_to instant_game_path(game), 
+                      class: "block w-full bg-gradient-to-r from-#{instant_game_color(game.ticket_price)}-500 to-#{instant_game_color(game.ticket_price)}-600 text-white text-center py-3 rounded-lg font-semibold hover:from-#{instant_game_color(game.ticket_price)}-600 hover:to-#{instant_game_color(game.ticket_price)}-700 transition-all duration-200 transform hover:scale-105" do %>
+                    🎫 Play Now - $<%= game.ticket_price %>
+                  <% end %>
+                <% else %>
+                  <div class="block w-full bg-gray-300 text-gray-600 text-center py-3 rounded-lg font-semibold cursor-not-allowed">
+                    <% if game.tickets_remaining <= 0 %>
+                      Sold Out
+                    <% else %>
+                      Unavailable
+                    <% end %>
+                  </div>
+                <% end %>
+                
+                <div class="flex space-x-2">
+                  <%= link_to instant_game_path(game, anchor: 'prizes'), 
+                      class: "flex-1 bg-gray-100 text-gray-700 text-center py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors" do %>
+                    View Prizes
+                  <% end %>
+                  <%= link_to instant_game_path(game, anchor: 'rules'), 
+                      class: "flex-1 bg-gray-100 text-gray-700 text-center py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors" do %>
+                    How to Play
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
+            <!-- Availability Indicator -->
+            <div class="absolute top-4 left-4 z-20">
+              <% if game.can_purchase? %>
+                <span class="bg-green-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                  Available
+                </span>
+              <% elsif game.tickets_remaining <= 0 %>
+                <span class="bg-red-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                  Sold Out
+                </span>
+              <% else %>
+                <span class="bg-gray-500 text-white px-2 py-1 rounded-full text-xs font-semibold">
+                  Inactive
+                </span>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- No Games Message -->
+    <% if @instant_games.empty? %>
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🎰</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">No Instant Games Available</h3>
+        <p class="text-gray-600 mb-8">Check back soon for exciting instant win games!</p>
+        <%= link_to dashboard_path, 
+            class: "inline-block bg-purple-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-purple-700 transition-colors" do %>
+          Return to Dashboard
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Game Features -->
+    <div class="mt-16 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div class="text-center">
+        <div class="text-4xl mb-4">⚡</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Instant Results</h3>
+        <p class="text-gray-600">Know if you've won immediately - no waiting for draws!</p>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl mb-4">🎯</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Better Odds</h3>
+        <p class="text-gray-600">Higher chances of winning compared to traditional lottery games.</p>
+      </div>
+      <div class="text-center">
+        <div class="text-4xl mb-4">💰</div>
+        <h3 class="text-xl font-bold text-gray-900 mb-2">Multiple Prize Levels</h3>
+        <p class="text-gray-600">Win anything from your ticket price back to the top prize!</p>
+      </div>
+    </div>
+
+    <!-- Responsible Gaming Notice -->
+    <div class="mt-16 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-semibold text-yellow-800">Play Responsibly</h3>
+          <p class="text-yellow-700 mt-1">
+            Instant games are for entertainment. Set limits, play within your means, and never chase losses. 
+            If you need help, visit our <%= link_to "Responsible Gaming", "#", class: "underline font-semibold" %> resources.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,280 @@
+<% content_for :title, "User Details - #{@user.name || @user.email}" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg">
+  <!-- Header Section -->
+  <div class="px-6 py-4 border-b border-gray-200">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">User Details</h1>
+        <p class="text-sm text-gray-600 mt-1">Manage user account and verification status</p>
+      </div>
+      <div class="flex space-x-3">
+        <%= link_to "Edit User", edit_admin_user_path(@user), 
+            class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+        <%= link_to "Back to Users", admin_users_path, 
+            class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 p-6">
+    <!-- User Information -->
+    <div class="lg:col-span-2 space-y-6">
+      <!-- Basic Info Card -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Basic Information</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Full Name</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.name || 'Not provided' %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Email</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.email %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Username</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.username || 'Not set' %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Phone Number</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.phone_number || 'Not provided' %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Date of Birth</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.date_of_birth&.strftime("%B %d, %Y") || 'Not provided' %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">State Jurisdiction</label>
+            <p class="mt-1 text-sm text-gray-900"><%= @user.state_jurisdiction&.state_name || 'Not set' %></p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Account Status Card -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Account Status</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Role</label>
+            <div class="mt-1 flex items-center">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @user.super_admin? ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' %>">
+                <%= @user.super_admin? ? 'Admin' : 'Player' %>
+              </span>
+              <% unless @user.super_admin? %>
+                <%= form_with url: update_role_admin_user_path(@user), method: :patch, local: true, class: "ml-2" do |form| %>
+                  <%= form.hidden_field :role, value: 'super_admin' %>
+                  <%= form.submit "Make Admin", class: "text-xs px-2 py-1 bg-purple-600 text-white rounded hover:bg-purple-700" %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Account Status</label>
+            <div class="mt-1 flex items-center">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @user.self_excluded? ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
+                <%= @user.self_excluded? ? 'Excluded' : 'Active' %>
+              </span>
+              <div class="ml-2 space-x-1">
+                <% if @user.self_excluded? %>
+                  <%= button_to "Activate", activate_admin_user_path(@user), 
+                      method: :post,
+                      class: "text-xs px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700 border-0" %>
+                <% else %>
+                  <%= button_to "Deactivate", deactivate_admin_user_path(@user), 
+                      method: :post,
+                      data: { confirm: "Are you sure you want to deactivate this user?" },
+                      class: "text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 border-0" %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Identity Verification</label>
+            <div class="mt-1 flex items-center">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @user.identity_verified? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= @user.identity_verified? ? 'Verified' : 'Pending' %>
+              </span>
+              <% if @identity_verification %>
+                <div class="ml-2 space-x-1">
+                  <% unless @user.identity_verified? %>
+                    <%= link_to "Verify", verify_identity_admin_user_path(@user), method: :post, 
+                        class: "text-xs px-2 py-1 bg-green-600 text-white rounded hover:bg-green-700" %>
+                    <%= link_to "Reject", reject_identity_admin_user_path(@user), method: :post, 
+                        class: "text-xs px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700" %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Financial Summary Card -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Financial Summary</h3>
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Account Balance</label>
+            <p class="mt-1 text-lg font-semibold text-gray-900">$<%= number_with_precision(@user.account_balance, precision: 2) %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Total Spent</label>
+            <p class="mt-1 text-lg font-semibold text-red-600">$<%= number_with_precision(@total_spent, precision: 2) %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Total Won</label>
+            <p class="mt-1 text-lg font-semibold text-green-600">$<%= number_with_precision(@total_won, precision: 2) %></p>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-500">Net Result</label>
+            <p class="mt-1 text-lg font-semibold <%= @net_result >= 0 ? 'text-green-600' : 'text-red-600' %>">
+              $<%= number_with_precision(@net_result, precision: 2) %>
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Spending Limits Card -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Spending Limits</h3>
+        <%= form_with model: @user, url: update_limits_admin_user_path(@user), method: :patch, local: true do |form| %>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div>
+              <%= form.label :spending_limit_daily, "Daily Limit", class: "block text-sm font-medium text-gray-500" %>
+              <%= form.number_field :spending_limit_daily, step: 0.01, 
+                  class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            </div>
+            <div>
+              <%= form.label :spending_limit_weekly, "Weekly Limit", class: "block text-sm font-medium text-gray-500" %>
+              <%= form.number_field :spending_limit_weekly, step: 0.01, 
+                  class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            </div>
+            <div>
+              <%= form.label :spending_limit_monthly, "Monthly Limit", class: "block text-sm font-medium text-gray-500" %>
+              <%= form.number_field :spending_limit_monthly, step: 0.01, 
+                  class: "mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+            </div>
+          </div>
+          <div class="mt-4">
+            <%= form.submit "Update Limits", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700" %>
+          </div>
+        <% end %>
+      </div>
+
+      <!-- Recent Activity -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Recent Activity</h3>
+        
+        <!-- Tickets -->
+        <% if @user_tickets.any? %>
+          <div class="mb-6">
+            <h4 class="text-md font-medium text-gray-700 mb-2">Recent Lottery Tickets</h4>
+            <div class="space-y-2">
+              <% @user_tickets.each do |ticket| %>
+                <div class="flex justify-between items-center p-3 bg-white rounded border">
+                  <div>
+                    <span class="font-medium"><%= ticket.lottery_game.name %></span>
+                    <span class="text-sm text-gray-500 ml-2">Numbers: <%= ticket.numbers %></span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-medium">$<%= ticket.lottery_game.ticket_price %></div>
+                    <div class="text-xs text-gray-500"><%= time_ago_in_words(ticket.created_at) %> ago</div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- Scratch-offs -->
+        <% if @user_scratch_offs.any? %>
+          <div class="mb-6">
+            <h4 class="text-md font-medium text-gray-700 mb-2">Recent Scratch-offs</h4>
+            <div class="space-y-2">
+              <% @user_scratch_offs.each do |scratch_off| %>
+                <div class="flex justify-between items-center p-3 bg-white rounded border">
+                  <div>
+                    <span class="font-medium"><%= scratch_off.instant_game.name %></span>
+                    <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full ml-2 <%= scratch_off.is_winner? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+                      <%= scratch_off.is_winner? ? "Winner: $#{scratch_off.prize_amount}" : 'No Prize' %>
+                    </span>
+                  </div>
+                  <div class="text-right">
+                    <div class="text-sm font-medium">$<%= scratch_off.instant_game.ticket_price %></div>
+                    <div class="text-xs text-gray-500"><%= time_ago_in_words(scratch_off.created_at) %> ago</div>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <div class="space-y-6">
+      <!-- Quick Stats -->
+      <div class="bg-gray-50 rounded-lg p-6">
+        <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Stats</h3>
+        <div class="space-y-3">
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-500">Member Since</span>
+            <span class="text-sm font-medium text-gray-900"><%= @user.created_at.strftime("%b %Y") %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-500">Last Activity</span>
+            <span class="text-sm font-medium text-gray-900"><%= time_ago_in_words(@user.updated_at) %> ago</span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-500">Total Tickets</span>
+            <span class="text-sm font-medium text-gray-900"><%= @user.tickets.count %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-500">Scratch-offs</span>
+            <span class="text-sm font-medium text-gray-900"><%= @user.scratch_offs.count %></span>
+          </div>
+          <div class="flex justify-between">
+            <span class="text-sm text-gray-500">Subscriptions</span>
+            <span class="text-sm font-medium text-gray-900"><%= @user.subscriptions.count %></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Identity Verification Details -->
+      <% if @identity_verification %>
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-semibold text-gray-900 mb-4">Identity Verification</h3>
+          <div class="space-y-3">
+            <div>
+              <label class="block text-sm font-medium text-gray-500">Status</label>
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= @identity_verification.verified? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= @identity_verification.status.humanize %>
+              </span>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-500">Document Type</label>
+              <p class="text-sm text-gray-900"><%= @identity_verification.document_type || 'Not specified' %></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-500">SSN (Last 4)</label>
+              <p class="text-sm text-gray-900">***-**-<%= @identity_verification.ssn_last_four %></p>
+            </div>
+            <div>
+              <label class="block text-sm font-medium text-gray-500">Address</label>
+              <p class="text-sm text-gray-900"><%= @identity_verification.full_address %></p>
+            </div>
+            <% if @identity_verification.verification_date %>
+              <div>
+                <label class="block text-sm font-medium text-gray-500">Verified Date</label>
+                <p class="text-sm text-gray-900"><%= @identity_verification.verification_date.strftime("%B %d, %Y") %></p>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+</div>

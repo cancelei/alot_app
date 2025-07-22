@@ -1,0 +1,203 @@
+<% content_for :title, "User Management" %>
+
+<div class="container mx-auto px-4 py-8">
+  <div class="bg-white rounded-lg shadow-lg">
+  <!-- Header Section -->
+  <div class="px-6 py-4 border-b border-gray-200">
+    <div class="flex justify-between items-center">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">User Management</h1>
+        <p class="text-sm text-gray-600 mt-1">Manage user accounts, verification status, and permissions</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="px-6 py-4 bg-gray-50 border-b border-gray-200">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-blue-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-500">Total Users</p>
+            <p class="text-2xl font-semibold text-gray-900"><%= @total_users %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-500">Verified Users</p>
+            <p class="text-2xl font-semibold text-gray-900"><%= @verified_users %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-purple-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-500">Admin Users</p>
+            <p class="text-2xl font-semibold text-gray-900"><%= @admin_users %></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white p-4 rounded-lg shadow-sm">
+        <div class="flex items-center">
+          <div class="flex-shrink-0">
+            <div class="w-8 h-8 bg-red-500 rounded-full flex items-center justify-center">
+              <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
+                <path fill-rule="evenodd" d="M13.477 14.89A6 6 0 015.11 6.524l8.367 8.368zm1.414-1.414L6.524 5.11a6 6 0 018.367 8.367zM18 10a8 8 0 11-16 0 8 8 0 0116 0z" clip-rule="evenodd"/>
+              </svg>
+            </div>
+          </div>
+          <div class="ml-3">
+            <p class="text-sm font-medium text-gray-500">Self-Excluded</p>
+            <p class="text-2xl font-semibold text-gray-900"><%= @self_excluded_users %></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="px-6 py-4 border-b border-gray-200">
+    <%= form_with url: admin_users_path, method: :get, local: true, class: "flex flex-wrap gap-4 items-end" do |form| %>
+      <div class="flex-1 min-w-64">
+        <%= form.text_field :search, placeholder: "Search by name or email...", 
+            value: params[:search], 
+            class: "w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" %>
+      </div>
+      
+      <div>
+        <%= form.select :role, options_for_select([
+          ['All Roles', ''],
+          ['Players', 'player'],
+          ['Admins', 'super_admin']
+        ], params[:role]), {}, 
+        { class: "px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+      </div>
+      
+      <div>
+        <%= form.select :verified, options_for_select([
+          ['All Users', ''],
+          ['Verified', 'true'],
+          ['Unverified', 'false']
+        ], params[:verified]), {}, 
+        { class: "px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+      </div>
+      
+      <div>
+        <%= form.select :state_id, options_from_collection_for_select(@states, :id, :state_name, params[:state_id]), 
+            { prompt: 'All States' }, 
+            { class: "px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500" } %>
+      </div>
+      
+      <div>
+        <%= form.submit "Filter", class: "px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2" %>
+      </div>
+      
+      <div>
+        <%= link_to "Clear", admin_users_path, class: "px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2" %>
+      </div>
+    <% end %>
+  </div>
+
+  <!-- Users Table -->
+  <div class="overflow-x-auto">
+    <table class="min-w-full divide-y divide-gray-200">
+      <thead class="bg-gray-50">
+        <tr>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">User</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Email</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Role</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">State</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Verified</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Joined</th>
+          <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+        </tr>
+      </thead>
+      <tbody class="bg-white divide-y divide-gray-200">
+        <% @users.each do |user| %>
+          <tr class="hover:bg-gray-50">
+            <td class="px-6 py-4 whitespace-nowrap">
+              <div class="flex items-center">
+                <div class="flex-shrink-0 h-10 w-10">
+                  <div class="h-10 w-10 rounded-full bg-gray-300 flex items-center justify-center">
+                    <span class="text-sm font-medium text-gray-700">
+                      <%= user.name&.first&.upcase || user.email.first.upcase %>
+                    </span>
+                  </div>
+                </div>
+                <div class="ml-4">
+                  <div class="text-sm font-medium text-gray-900"><%= user.name || 'N/A' %></div>
+                  <div class="text-sm text-gray-500">ID: <%= user.id %></div>
+                </div>
+              </div>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+              <%= user.email %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= user.super_admin? ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800' %>">
+                <%= user.super_admin? ? 'Admin' : 'Player' %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= user.state_jurisdiction&.state_name || 'N/A' %>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= user.self_excluded? ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800' %>">
+                <%= user.self_excluded? ? 'Excluded' : 'Active' %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap">
+              <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full <%= user.identity_verified? ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' %>">
+                <%= user.identity_verified? ? 'Verified' : 'Pending' %>
+              </span>
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+              <%= time_ago_in_words(user.created_at) %> ago
+            </td>
+            <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+              <%= link_to "View", admin_user_path(user), 
+                  class: "text-blue-600 hover:text-blue-900 mr-3" %>
+              <%= link_to "Edit", edit_admin_user_path(user), 
+                  class: "text-indigo-600 hover:text-indigo-900" %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Results Count -->
+  <div class="px-6 py-3 border-t border-gray-200 bg-gray-50">
+    <p class="text-sm text-gray-600">
+      Showing <%= @users.count %> users (limited to 50 results)
+    </p>
+  </div>
+</div>
+</div>

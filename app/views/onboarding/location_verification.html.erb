@@ -1,0 +1,121 @@
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center px-4">
+  <div class="max-w-md w-full space-y-8">
+    <!-- Progress indicator -->
+    <div class="flex items-center justify-center space-x-2 mb-8">
+      <div class="h-2 w-8 bg-indigo-600 rounded-full"></div>
+      <div class="h-2 w-8 bg-indigo-600 rounded-full"></div>
+      <div class="h-2 w-8 bg-gray-300 rounded-full"></div>
+      <div class="h-2 w-8 bg-gray-300 rounded-full"></div>
+    </div>
+
+    <div class="text-center">
+      <div class="mx-auto h-16 w-16 bg-indigo-600 rounded-full flex items-center justify-center mb-6">
+        <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+        </svg>
+      </div>
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Location Verification</h1>
+      <p class="text-lg text-gray-600 mb-8">We need to verify your location to ensure compliance with local gaming laws.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <%= form_with url: onboarding_location_verification_path, method: :post, local: true, class: "space-y-6" do |form| %>
+        <div class="bg-blue-50 border border-blue-200 rounded-md p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-blue-800">
+                Why we need this
+              </h3>
+              <div class="mt-2 text-sm text-blue-700">
+                <p>Gaming laws vary by location. We need to verify that you're in a jurisdiction where our services are legally available.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4">
+          <div class="bg-gray-50 rounded-lg p-4">
+            <div class="flex items-center space-x-3">
+              <div class="flex-shrink-0">
+                <div class="h-8 w-8 bg-green-100 rounded-full flex items-center justify-center">
+                  <svg class="h-5 w-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h4 class="text-sm font-medium text-gray-900">Detected Location</h4>
+                <p class="text-sm text-gray-500">United States (Authorized)</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <p class="text-sm font-medium text-gray-700">Please confirm:</p>
+            
+            <div class="flex items-center">
+              <input id="location_confirmed" 
+                     name="location_confirmed" 
+                     type="checkbox" 
+                     value="true"
+                     required
+                     class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+              <label for="location_confirmed" class="ml-2 block text-sm text-gray-900">
+                I confirm that I am currently located in an authorized jurisdiction
+              </label>
+            </div>
+            
+            <div class="flex items-center">
+              <input id="not_restricted" 
+                     name="not_restricted" 
+                     type="checkbox" 
+                     required
+                     class="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded">
+              <label for="not_restricted" class="ml-2 block text-sm text-gray-900">
+                I am not accessing this service from a restricted location
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-yellow-50 border border-yellow-200 rounded-md p-4">
+          <div class="flex">
+            <div class="flex-shrink-0">
+              <svg class="h-5 w-5 text-yellow-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"></path>
+              </svg>
+            </div>
+            <div class="ml-3">
+              <h3 class="text-sm font-medium text-yellow-800">
+                Important Notice
+              </h3>
+              <div class="mt-2 text-sm text-yellow-700">
+                <p>Providing false location information may result in account suspension and forfeiture of winnings.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex space-x-4">
+          <%= link_to "Back", onboarding_age_verification_path, 
+                      class: "flex-1 flex justify-center py-3 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+          
+          <%= form.submit "Continue", 
+                          class: "flex-1 flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="text-center">
+      <p class="text-xs text-gray-500">
+        Your location data is used solely for compliance purposes and is not shared with third parties.
+      </p>
+    </div>
+  </div>
+</div>

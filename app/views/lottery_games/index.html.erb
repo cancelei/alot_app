@@ -1,0 +1,153 @@
+<% content_for :title, "Lottery Games" %>
+
+<div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100">
+  <div class="container mx-auto px-4 py-8">
+    <!-- Header -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Choose Your Game</h1>
+      <p class="text-xl text-gray-600 max-w-2xl mx-auto">
+        From rapid 5-minute draws to massive weekly jackpots - find your perfect lottery experience
+      </p>
+    </div>
+
+    <!-- Game Categories -->
+    <div class="mb-8">
+      <div class="flex flex-wrap justify-center gap-4">
+        <%= link_to lottery_games_path, 
+            class: "px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors" do %>
+          All Games
+        <% end %>
+        <%= link_to lottery_games_path(filter: 'rapid'), 
+            class: "px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors" do %>
+          Rapid Games
+        <% end %>
+        <%= link_to lottery_games_path(filter: 'daily'), 
+            class: "px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors" do %>
+          Daily Games
+        <% end %>
+        <%= link_to lottery_games_path(filter: 'weekly'), 
+            class: "px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-lg font-semibold hover:bg-blue-50 transition-colors" do %>
+          Weekly Jackpots
+        <% end %>
+      </div>
+    </div>
+
+    <!-- Games Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+      <% @lottery_games.each do |game| %>
+        <div class="bg-white rounded-2xl shadow-lg hover:shadow-xl transition-shadow duration-300 overflow-hidden">
+          <!-- Game Header -->
+          <div class="bg-gradient-to-r from-<%= game_color(game.game_type) %>-500 to-<%= game_color(game.game_type) %>-600 p-6 text-white">
+            <div class="flex justify-between items-start mb-4">
+              <h3 class="text-2xl font-bold"><%= game.name %></h3>
+              <span class="bg-white bg-opacity-20 px-3 py-1 rounded-full text-sm font-semibold uppercase">
+                <%= game.game_type %>
+              </span>
+            </div>
+            <p class="text-<%= game_color(game.game_type) %>-100 text-sm">
+              <%= game.description %>
+            </p>
+          </div>
+
+          <!-- Game Details -->
+          <div class="p-6">
+            <!-- Jackpot Amount -->
+            <div class="text-center mb-6">
+              <div class="text-3xl font-bold text-gray-900 mb-2">
+                $<%= number_with_delimiter(game.current_prize_pool.to_i) %>
+              </div>
+              <div class="text-sm text-gray-500">Current Jackpot</div>
+            </div>
+
+            <!-- Game Info -->
+            <div class="space-y-3 mb-6">
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Ticket Price:</span>
+                <span class="font-semibold">$<%= game.ticket_price %></span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Next Draw:</span>
+                <span class="font-semibold text-<%= game_color(game.game_type) %>-600">
+                  <%= time_until_draw(game) %>
+                </span>
+              </div>
+              <div class="flex justify-between items-center">
+                <span class="text-gray-600">Numbers to Pick:</span>
+                <span class="font-semibold">
+                  <%= game.numbers_to_pick %> from <%= game.number_range_min %>-<%= game.number_range_max %>
+                  <% if game.bonus_ball? %>
+                    + Bonus
+                  <% end %>
+                </span>
+              </div>
+              <% if game.multiplier_available? %>
+                <div class="flex justify-between items-center">
+                  <span class="text-gray-600">Multiplier:</span>
+                  <span class="font-semibold text-green-600">+$<%= game.multiplier_cost %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="space-y-3">
+              <%= link_to lottery_game_path(game), 
+                  class: "block w-full bg-gradient-to-r from-#{game_color(game.game_type)}-500 to-#{game_color(game.game_type)}-600 text-white text-center py-3 rounded-lg font-semibold hover:from-#{game_color(game.game_type)}-600 hover:to-#{game_color(game.game_type)}-700 transition-all duration-200 transform hover:scale-105" do %>
+                Play Now
+              <% end %>
+              
+              <div class="flex space-x-2">
+                <%= link_to new_lottery_game_ticket_path(game, quick_pick: true), 
+                    class: "flex-1 bg-gray-100 text-gray-700 text-center py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors" do %>
+                  Quick Pick
+                <% end %>
+                <%= link_to lottery_game_path(game, anchor: 'stats'), 
+                    class: "flex-1 bg-gray-100 text-gray-700 text-center py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors" do %>
+                  View Stats
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+          <!-- Game Stats Footer -->
+          <div class="bg-gray-50 px-6 py-4 border-t">
+            <div class="flex justify-between text-sm text-gray-600">
+              <span>Tickets Sold: <%= number_with_delimiter(game.total_tickets_sold) %></span>
+              <span>Win Rate: <%= game.win_frequency %>%</span>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+
+    <!-- No Games Message -->
+    <% if @lottery_games.empty? %>
+      <div class="text-center py-16">
+        <div class="text-6xl mb-4">🎰</div>
+        <h3 class="text-2xl font-bold text-gray-900 mb-2">No Games Available</h3>
+        <p class="text-gray-600 mb-8">Check back soon for exciting lottery games!</p>
+        <%= link_to dashboard_path, 
+            class: "inline-block bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-colors" do %>
+          Return to Dashboard
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- Responsible Gaming Notice -->
+    <div class="mt-16 bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+      <div class="flex items-start">
+        <div class="flex-shrink-0">
+          <svg class="h-6 w-6 text-yellow-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+          </svg>
+        </div>
+        <div class="ml-3">
+          <h3 class="text-lg font-semibold text-yellow-800">Play Responsibly</h3>
+          <p class="text-yellow-700 mt-1">
+            Lottery games are for entertainment. Set limits, play within your means, and never chase losses. 
+            If you need help, visit our <%= link_to "Responsible Gaming", "#", class: "underline font-semibold" %> resources.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

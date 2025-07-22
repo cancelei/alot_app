@@ -1,0 +1,146 @@
+<div class="min-h-screen bg-gradient-to-br from-green-50 to-emerald-100 flex items-center justify-center px-4">
+  <div class="max-w-2xl w-full space-y-8">
+    <!-- Success Animation Container -->
+    <div class="text-center">
+      <div class="mx-auto h-20 w-20 bg-green-500 rounded-full flex items-center justify-center mb-6 animate-pulse">
+        <svg class="h-10 w-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+        </svg>
+      </div>
+      <h1 class="text-4xl font-bold text-gray-900 mb-4">Welcome to the Lottery!</h1>
+      <p class="text-xl text-gray-600 mb-8">Your account is now fully set up and ready to play.</p>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-lg p-8">
+      <div class="text-center space-y-6">
+        <!-- Completion Summary -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="text-center">
+            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-900">Age Verified</p>
+            <p class="text-xs text-gray-500">18+ Confirmed</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-900">Location Set</p>
+            <p class="text-xs text-gray-500">Eligible Region</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-900">Identity Verified</p>
+            <p class="text-xs text-gray-500">Secure Account</p>
+          </div>
+          
+          <div class="text-center">
+            <div class="h-12 w-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-2">
+              <svg class="h-6 w-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+              </svg>
+            </div>
+            <p class="text-sm font-medium text-gray-900">Tutorial Done</p>
+            <p class="text-xs text-gray-500">Ready to Play</p>
+          </div>
+        </div>
+
+        <!-- Account Summary -->
+        <div class="bg-gray-50 rounded-lg p-6">
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Your Account Summary</h3>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-center">
+            <div>
+              <p class="text-2xl font-bold text-indigo-600">$0.00</p>
+              <p class="text-sm text-gray-500">Account Balance</p>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-indigo-600">0</p>
+              <p class="text-sm text-gray-500">Active Tickets</p>
+            </div>
+            <div>
+              <p class="text-2xl font-bold text-indigo-600">$<%= current_user.daily_spending_limit || 100 %></p>
+              <p class="text-sm text-gray-500">Daily Limit</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Steps -->
+        <div class="text-left">
+          <h3 class="text-lg font-medium text-gray-900 mb-4 text-center">What's Next?</h3>
+          <div class="space-y-3">
+            <div class="flex items-center space-x-3">
+              <div class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-indigo-600 font-semibold text-sm">1</span>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Add funds to your account</p>
+                <p class="text-sm text-gray-500">Use credit card, debit card, or bank transfer</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+              <div class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-indigo-600 font-semibold text-sm">2</span>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Choose your first lottery game</p>
+                <p class="text-sm text-gray-500">Browse available lotteries and jackpots</p>
+              </div>
+            </div>
+            
+            <div class="flex items-center space-x-3">
+              <div class="h-8 w-8 bg-indigo-100 rounded-full flex items-center justify-center flex-shrink-0">
+                <span class="text-indigo-600 font-semibold text-sm">3</span>
+              </div>
+              <div>
+                <p class="font-medium text-gray-900">Pick your lucky numbers</p>
+                <p class="text-sm text-gray-500">Select manually or use Quick Pick</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-6">
+          <div class="flex flex-col sm:flex-row space-y-3 sm:space-y-0 sm:space-x-4">
+            <%= link_to "Go to Dashboard", dashboard_index_path, 
+                        class: "flex-1 flex justify-center py-3 px-6 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+            
+            <%= link_to "Browse Lotteries", lotteries_path, 
+                        class: "flex-1 flex justify-center py-3 px-6 border border-gray-300 rounded-md shadow-sm text-base font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out" %>
+          </div>
+        </div>
+
+        <!-- Welcome Bonus (Optional) -->
+        <div class="bg-gradient-to-r from-yellow-50 to-orange-50 border border-yellow-200 rounded-lg p-4">
+          <div class="flex items-center">
+            <svg class="h-6 w-6 text-yellow-400 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 0v1m-2 0V5.5A2.5 2.5 0 1014.5 3h-5A2.5 2.5 0 0112 8zM3 21h18M12 8h.01"></path>
+            </svg>
+            <div class="flex-1">
+              <h4 class="text-sm font-medium text-yellow-800">Welcome Bonus Available!</h4>
+              <p class="text-sm text-yellow-700">Get $5 free credit when you make your first deposit of $20 or more.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="text-center text-sm text-gray-500">
+      <p>Questions? Visit our <a href="#" class="text-indigo-600 hover:text-indigo-500">Help Center</a> or <a href="#" class="text-indigo-600 hover:text-indigo-500">Contact Support</a></p>
+    </div>
+  </div>
+</div>
